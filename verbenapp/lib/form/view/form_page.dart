@@ -23,9 +23,6 @@ class FormPage2 extends StatelessWidget {
             create: (BuildContext context) =>
                 FormLocalidadBloc(localidadBL: _locBL),
           ),
-          BlocProvider<VerbenasBloc>(
-            create: (BuildContext context) => VerbenasBloc(),
-          ),
           BlocProvider<FormVerbenaBloc>(
             create: (BuildContext context) => FormVerbenaBloc(),
           ),

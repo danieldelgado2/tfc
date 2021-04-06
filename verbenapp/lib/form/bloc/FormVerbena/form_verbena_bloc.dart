@@ -7,9 +7,17 @@ import 'package:verbenapp/src2/DAL/models/verbena.dart';
 part 'form_verbena_event.dart';
 part 'form_verbena_state.dart';
 
+///
+/// Bloc encargado de manejar los inputs
+/// de la verbena nueva/seleccionada
+///
 class FormVerbenaBloc extends Bloc<FormVerbenaEvent, FormVerbenaState> {
   FormVerbenaBloc() : super(FormVerbenaState.initial());
 
+  /// Dado un evento ocurrido en la UI,
+  /// el State cambiará con unas nuevas
+  /// propiedades
+  ///
   @override
   Stream<FormVerbenaState> mapEventToState(
     FormVerbenaEvent event,

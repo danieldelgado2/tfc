@@ -59,7 +59,7 @@ class Inputs extends StatelessWidget {
             ),
             controller: TextEditingController(text: loc.nombre),
             style: TextStyle(fontSize: 22),
-            onSaved: (value) {
+            onChanged: (value) {
               context.read<FormLocalidadBloc>().add(ModificarLocalidad(value));
             },
           ),

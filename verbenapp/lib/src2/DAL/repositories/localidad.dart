@@ -2,12 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:verbenapp/src2/DAL/repositories/repositories.dart';
 
 class LocalidadRepository {
-  var provinciasJson = [];
-  List<Localidad> proximas = [];
+  final _collection = Firestore.instance.collection('localidades');
+
+  Future<List<Localidad>> localidadesDD() async {
+    var response = await _collection.getDocuments();
+
+    return Localidades.fromDocumentsList(response.documents).localidades;
+  }
 
   Future<List<Localidad>> fromList(List<String> localidades) async {
-    var request = await Firestore.instance
-        .collection('localidades')
+    var request = await _collection
         .where('nombre', arrayContainsAny: localidades)
         .getDocuments();
 
@@ -17,10 +21,8 @@ class LocalidadRepository {
   }
 
   Future<List<Localidad>> fromProvincia(String nombre) async {
-    var response = await Firestore.instance
-        .collection('localidades')
-        .where('provincia', isEqualTo: nombre)
-        .getDocuments();
+    var response =
+        await _collection.where('provincia', isEqualTo: nombre).getDocuments();
 
     return Localidades.fromJsonList(
             response.documents.map((element) => element.data).toList())
@@ -29,15 +31,6 @@ class LocalidadRepository {
 
   Future<List<Localidad>> fromHotProvincia(String provincia) async =>
       _enRangoFecha(await fromProvincia(provincia));
-
-  Future<List<Localidad>> localidadesDD() async {
-    var response =
-        await Firestore.instance.collection('localidades').getDocuments();
-
-    return Localidades.fromJsonList(
-            response.documents.map((element) => element.data).toList())
-        .localidades;
-  }
 
   // Future<List<Localidad>> insertarLocalidadesProximas() async {
   //   var response =
@@ -74,13 +67,12 @@ class LocalidadRepository {
   }
 
   Future<bool> insertarLocalidad(Localidad loc) async {
-    await Future.delayed(Duration(seconds: 2));
-    print(loc.nombre);
-    print(loc.provincia);
-    print(loc.latitud);
-    print(loc.longitud);
+    if (loc.id != "") {
+      await _collection.document(loc.id).setData(loc.toJson());
+      return true;
+    }
 
-    return true;
+    return (await _collection.add(loc.toJson()) != null);
   }
 
   // Future<List<Localidad>> localidadesParaSelect() async {

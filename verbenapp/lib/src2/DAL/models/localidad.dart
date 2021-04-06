@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:verbenapp/src2/DAL/models/models.dart';
 
 class Localidades {
@@ -13,6 +14,16 @@ class Localidades {
 
     for (var item in jsonList) {
       final localidad = new Localidad.fromJson(item);
+
+      localidades.add(localidad);
+    }
+  }
+  Localidades.fromDocumentsList(List<DocumentSnapshot> documents) {
+    if (documents.isEmpty) return;
+
+    for (var item in documents) {
+      final localidad = new Localidad.fromJson(item.data);
+      localidad.id = item.reference.documentID;
       localidades.add(localidad);
     }
   }
@@ -76,6 +87,7 @@ class Localidad {
         "nombre": nombre,
         "longitud": latitud,
         "latitud": longitud,
+        "provincia": provincia,
         "verbenas": List<dynamic>.from(verbenas.map((x) => x.toJson()))
       };
 }

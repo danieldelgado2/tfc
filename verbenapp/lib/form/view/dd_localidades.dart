@@ -55,11 +55,10 @@ class DropDownLoc extends StatelessWidget {
           autoValidateMode: AutovalidateMode.always,
           onFind: (str) async {
             if (str.isEmpty) return [];
-            var results = [];
-            state.localidadesDD.forEach((p) {
-              if (!p.nombre.toLowerCase().contains(str.toLowerCase()))
-                return false;
-              results.add(p);
+            var results = <Localidad>[];
+            state.localidadesDD.forEach((l) {
+              if (l.nombre.toLowerCase().contains(str.toLowerCase()))
+                results.add(l);
             });
 
             return results;

@@ -7,10 +7,21 @@ import 'package:verbenapp/form/form.dart';
 part 'form_localidad_event.dart';
 part 'form_localidad_state.dart';
 
+///
+/// Bloc encargado de manejar los estados
+/// de los inputs relacionados con la localidad
+/// que se está editando
+///
 class FormLocalidadBloc extends Bloc<FormLocalidadEvent, FormLocalidadState> {
   FormLocalidadBloc({this.localidadBL}) : super(FormLocalidadState.initial());
 
   final localidadBL;
+
+  ///
+  /// Dado un evento ocurrido en la UI,
+  /// el State cambiará con unas nuevas
+  /// propiedades
+  ///
   @override
   Stream<FormLocalidadState> mapEventToState(
     FormLocalidadEvent event,
@@ -28,13 +39,13 @@ class FormLocalidadBloc extends Bloc<FormLocalidadEvent, FormLocalidadState> {
         yield state;
       }
     } else if (event is ModificarLatitud) {
-      final r = num.tryParse(event.data);
+      final r = double.tryParse(event.data);
       if (r != null) {
         state.locEditar.latitud = r;
         yield state;
       }
     } else if (event is ModificarLongitud) {
-      final r = num.tryParse(event.data);
+      final r = double.tryParse(event.data);
       if (r != null) {
         state.locEditar.longitud = r;
         yield state;
@@ -52,7 +63,4 @@ class FormLocalidadBloc extends Bloc<FormLocalidadEvent, FormLocalidadState> {
       yield FormLocalidadState.success();
     }
   }
-
-  Stream<FormLocalidadState> _mapEventToState(
-      FormLocalidadEvent event) async* {}
 }
