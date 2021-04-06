@@ -5,6 +5,8 @@ import 'package:verbenapp/src/pages/detalle_page.dart';
 import 'package:verbenapp/src/pages/form_page.dart';
 import 'package:verbenapp/src/pages/home_page.dart';
 
+import 'form/view/form_page.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (BuildContext context) => HomePage(),
           'buscar': (BuildContext context) => BuscarPage(),
-          'form': (BuildContext context) => FormPage(),
+          'form': (BuildContext context) => FormPage2(),
           'detalle': (BuildContext context) => DetallePage(),
         },
 

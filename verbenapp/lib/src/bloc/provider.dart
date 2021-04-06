@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:verbenapp/form/form.dart';
 import 'package:verbenapp/src/bloc/form_busqueda.dart';
 import 'package:verbenapp/src/bloc/mapa_bloc.dart';
 
@@ -17,8 +18,9 @@ class Provider extends InheritedWidget {
   }
   Provider._internal({Key key, Widget child}) : super(key: key, child: child);
 
+  final localidadBL = LocalidadBL();
   final localidadesBloc = LocalidadesBloc();
-  final formBloc = FormularioBloc();
+  final FormLocalidadBloc = FormularioBloc();
   final formInsertarBloc = FormularioInsertarBloc();
   final mapaBloc = MapaBloc();
 
@@ -28,7 +30,9 @@ class Provider extends InheritedWidget {
   bool updateShouldNotify(covariant InheritedWidget oldWidget) => true;
 
   static FormularioBloc ofFormMapa(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<Provider>().formBloc;
+    return context
+        .dependOnInheritedWidgetOfExactType<Provider>()
+        .FormLocalidadBloc;
   }
 
   static LocalidadesBloc ofLocalidades(BuildContext context) {
@@ -45,5 +49,9 @@ class Provider extends InheritedWidget {
     return context
         .dependOnInheritedWidgetOfExactType<Provider>()
         .formInsertarBloc;
+  }
+
+  static LocalidadBL ofLocalidadBL(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<Provider>().localidadBL;
   }
 }

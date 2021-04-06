@@ -73,9 +73,15 @@ class LocalidadRepository {
     return results;
   }
 
-  // Future<bool> insertarLocalidad(Localidad loc) async {
-  //   return true;
-  // }
+  Future<bool> insertarLocalidad(Localidad loc) async {
+    await Future.delayed(Duration(seconds: 2));
+    print(loc.nombre);
+    print(loc.provincia);
+    print(loc.latitud);
+    print(loc.longitud);
+
+    return true;
+  }
 
   // Future<List<Localidad>> localidadesParaSelect() async {
   //   var response =

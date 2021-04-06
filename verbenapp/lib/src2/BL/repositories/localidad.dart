@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:verbenapp/src2/BL/repositories/repositories.dart';
 
 class LocalidadBL {
@@ -58,9 +57,8 @@ class LocalidadBL {
     return results;
   }
 
-  // Future<bool> insertarLocalidad(Localidad loc) async {
-  //   return true;
-  // }
+  Future<bool> insertarLocalidad(Localidad loc) async =>
+      await _localidadRepository.insertarLocalidad(loc);
 
   // Future<List<Localidad>> localidadesParaSelect() async {
   //   var response =
