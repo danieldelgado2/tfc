@@ -8,8 +8,9 @@ part 'form_localidad_event.dart';
 part 'form_localidad_state.dart';
 
 class FormLocalidadBloc extends Bloc<FormLocalidadEvent, FormLocalidadState> {
-  FormLocalidadBloc() : super(FormLocalidadState.initial());
+  FormLocalidadBloc({this.localidadBL}) : super(FormLocalidadState.initial());
 
+  final localidadBL;
   @override
   Stream<FormLocalidadState> mapEventToState(
     FormLocalidadEvent event,
@@ -45,17 +46,10 @@ class FormLocalidadBloc extends Bloc<FormLocalidadEvent, FormLocalidadState> {
       state.locEditar.verbenas.removeAt(event.data);
       yield FormLocalidadState.quitarV(state.locEditar);
     } else if (event is GuardarLocalidad) {
-      // if (state.valid) {
-      //   yield FormLocalidadState.insertRegistro(state.locEditar);
-      //   final loc = state.locEditar;
-      //   final result = await localidadBL.insertarLocalidad(Localidad(
-      //       nombre: loc.localidad,
-      //       provincia: loc.provincia,
-      //       latitud: loc.latitud,
-      //       longitud: loc.longitud,
-      //       verbenas: loc.verbenas));
-      //   yield FormLocalidadState.success();
-      // }
+      yield FormLocalidadState.insertRegistro(state.locEditar);
+
+      final result = await localidadBL.insertarLocalidad(state.locEditar);
+      yield FormLocalidadState.success();
     }
   }
 

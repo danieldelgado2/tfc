@@ -20,7 +20,8 @@ class FormPage2 extends StatelessWidget {
             create: (BuildContext context) => DDBloc(localidadBL: _locBL),
           ),
           BlocProvider<FormLocalidadBloc>(
-            create: (BuildContext context) => FormLocalidadBloc(),
+            create: (BuildContext context) =>
+                FormLocalidadBloc(localidadBL: _locBL),
           ),
           BlocProvider<VerbenasBloc>(
             create: (BuildContext context) => VerbenasBloc(),

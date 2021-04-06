@@ -2,7 +2,6 @@ part of 'form_localidad_bloc.dart';
 
 enum FormLocalidadStatus {
   initial,
-  // insertRegistro,
   loading,
   // success,
   quitarV,
@@ -10,7 +9,7 @@ enum FormLocalidadStatus {
   changeDD
 }
 
-class FormLocalidadState extends Equatable {
+class FormLocalidadState {
   FormLocalidadState._(
       {this.locEditar,
       this.status = FormLocalidadStatus.initial,
@@ -27,7 +26,8 @@ class FormLocalidadState extends Equatable {
       : this._(
             locEditar: loc, valid: false, status: FormLocalidadStatus.agregarV);
 
-  FormLocalidadState.loading() : this._(status: FormLocalidadStatus.loading);
+  FormLocalidadState.insertRegistro(Localidad loc)
+      : this._(locEditar: loc, status: FormLocalidadStatus.loading);
   FormLocalidadState.validar(bool v) : this._(valid: v);
 
   //  FormLocalidadState.success() : this._(status: FormLocalidadStatus.success);
@@ -36,6 +36,5 @@ class FormLocalidadState extends Equatable {
   final locEditar;
   final valid;
 
-  @override
   List<Object> get props => [locEditar, status, valid];
 }
