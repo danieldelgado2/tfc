@@ -19,8 +19,9 @@ class Provider extends InheritedWidget {
   Provider._internal({Key key, Widget child}) : super(key: key, child: child);
 
   final localidadBL = LocalidadBL();
+  final mapaBL = MapaBL();
   final localidadesBloc = LocalidadesBloc();
-  final FormLocalidadBloc = FormularioBloc();
+  final formLocalidadBloc = FormularioBloc();
   final formInsertarBloc = FormularioInsertarBloc();
   final mapaBloc = MapaBloc();
 
@@ -32,7 +33,7 @@ class Provider extends InheritedWidget {
   static FormularioBloc ofFormMapa(BuildContext context) {
     return context
         .dependOnInheritedWidgetOfExactType<Provider>()
-        .FormLocalidadBloc;
+        .formLocalidadBloc;
   }
 
   static LocalidadesBloc ofLocalidades(BuildContext context) {
@@ -53,5 +54,9 @@ class Provider extends InheritedWidget {
 
   static LocalidadBL ofLocalidadBL(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<Provider>().localidadBL;
+  }
+
+  static MapaBL ofMapaBL(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<Provider>().mapaBL;
   }
 }
