@@ -18,6 +18,7 @@ class Provider extends InheritedWidget {
   }
   Provider._internal({Key key, Widget child}) : super(key: key, child: child);
 
+  final provinciaBL = ProvinciaBL();
   final localidadBL = LocalidadBL();
   final mapaBL = MapaBL();
   final localidadesBloc = LocalidadesBloc();
@@ -58,5 +59,9 @@ class Provider extends InheritedWidget {
 
   static MapaBL ofMapaBL(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<Provider>().mapaBL;
+  }
+
+  static ProvinciaBL ofProvinciaBL(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<Provider>().provinciaBL;
   }
 }
