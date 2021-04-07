@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:verbenapp/src2/BL/bl.dart';
+import 'package:verbenapp/src/BL/bl.dart';
 
 part 'dropdown_provincias_event.dart';
 part 'dropdown_provincias_state.dart';

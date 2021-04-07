@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/form/bloc/bloc.dart';
-import 'package:verbenapp/src/bloc/provider.dart';
+import 'package:verbenapp/provider.dart';
 
 import 'form_admin.dart';
 
-class FormPage2 extends StatelessWidget {
+class FormPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _sc = MediaQuery.of(context).size;

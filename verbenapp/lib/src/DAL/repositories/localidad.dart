@@ -1,27 +1,37 @@
-import 'package:verbenapp/src2/BL/repositories/repositories.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:verbenapp/src/DAL/models/models.dart';
+import 'package:verbenapp/src/DAL/repositories/repositories.dart';
 
-class LocalidadBL {
-  final _localidadRepository = LocalidadRepository();
-  final _coordenadaRepository = CoordenadaRepository();
+class LocalidadRepository {
+  final _collection = Firestore.instance.collection('localidades');
 
-  Future<List<Localidad>> fromUbicacion(
-      double latitude, double longitude) async {
-    var nombreLocalidadesCercanas = await _coordenadaRepository
-        .nombresLocFromUbicacion(latitude, longitude);
-    if (nombreLocalidadesCercanas.isEmpty) return [];
-    return await _localidadRepository.fromList(nombreLocalidadesCercanas);
+  Future<List<Localidad>> localidadesDD() async {
+    var response = await _collection.getDocuments();
+
+    return Localidades.fromDocumentsList(response.documents).localidades;
   }
 
-  Future<List<Localidad>> fromProvincia(String provincia) async =>
-      await _localidadRepository.fromProvincia(provincia);
+  Future<List<Localidad>> fromList(List<String> localidades) async {
+    var request = await _collection
+        .where('nombre', arrayContainsAny: localidades)
+        .getDocuments();
+
+    return Localidades.fromJsonList(
+            request.documents.map((element) => element.data).toList())
+        .localidades;
+  }
+
+  Future<List<Localidad>> fromProvincia(String nombre) async {
+    var response =
+        await _collection.where('provincia', isEqualTo: nombre).getDocuments();
+
+    return Localidades.fromJsonList(
+            response.documents.map((element) => element.data).toList())
+        .localidades;
+  }
 
   Future<List<Localidad>> fromHotProvincia(String provincia) async =>
-      _localidadesEnRangoFecha(
-          await _localidadRepository.fromProvincia(provincia));
-  Future<List<Localidad>> fromHotUbicacion(double lat, double lng) async =>
-      _localidadesEnRangoFecha(await fromUbicacion(lat, lng));
-  Future<List<Localidad>> localidadesDD() async =>
-      await _localidadRepository.localidadesDD();
+      _enRangoFecha(await fromProvincia(provincia));
 
   // Future<List<Localidad>> insertarLocalidadesProximas() async {
   //   var response =
@@ -38,7 +48,7 @@ class LocalidadBL {
   //   return results;
   // }
 
-  List<Localidad> _localidadesEnRangoFecha(List<Localidad> localidades) {
+  List<Localidad> _enRangoFecha(List<Localidad> localidades) {
     List<Localidad> results = [];
     var nextMonth = DateTime.now().add(Duration(days: 30));
     localidades.forEach((l) {
@@ -57,8 +67,14 @@ class LocalidadBL {
     return results;
   }
 
-  Future<bool> insertarLocalidad(Localidad loc) async =>
-      await _localidadRepository.insertarLocalidad(loc);
+  Future<bool> insertarLocalidad(Localidad loc) async {
+    if (loc.id != "") {
+      await _collection.document(loc.id).setData(loc.toJson());
+      return true;
+    }
+
+    return (await _collection.add(loc.toJson()) != null);
+  }
 
   // Future<List<Localidad>> localidadesParaSelect() async {
   //   var response =

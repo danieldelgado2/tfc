@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:verbenapp/src2/DAL/models/models.dart';
+import 'package:verbenapp/src/DAL/models/models.dart';
 
 class Localidades {
   List<Localidad> localidades = [];

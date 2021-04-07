@@ -1,10 +1,7 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:verbenapp/src/models/provincia.dart';
+import 'package:verbenapp/src/DAL/models/models.dart';
 
-class ProvinciaProvider {
-  var provinciasJson = [];
-
+class ProvinciaRepository {
   Future<List<Provincia>> provinciasParaSelect() async {
     var response =
         await Firestore.instance.collection('provincias').getDocuments();

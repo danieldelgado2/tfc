@@ -1,9 +1,9 @@
-import 'package:location/location.dart';
+import 'package:verbenapp/src/DAL/repositories/repositories.dart';
 
-class MapaProvider {
+class MapaRepository {
   final Location myLocation = Location();
-  bool _serviceEnabled;
-  PermissionStatus _permissionGranted;
+  bool _serviceEnabled = false;
+  PermissionStatus _permissionGranted = PermissionStatus.denied;
 
   Future<LocationData> getLocation() async {
     return myLocation.getLocation();

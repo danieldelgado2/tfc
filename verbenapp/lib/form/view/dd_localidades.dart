@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/form/bloc/bloc.dart';
 import 'package:verbenapp/form/form.dart';
-import 'package:verbenapp/src2/BL/bl.dart';
+import 'package:verbenapp/src/BL/bl.dart';
 
 class DDLocalidades extends StatelessWidget {
   @override

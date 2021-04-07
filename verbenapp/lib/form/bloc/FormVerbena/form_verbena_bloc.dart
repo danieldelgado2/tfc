@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:verbenapp/src2/DAL/models/verbena.dart';
+import 'package:verbenapp/src/DAL/models/verbena.dart';
 
 part 'form_verbena_event.dart';
 part 'form_verbena_state.dart';

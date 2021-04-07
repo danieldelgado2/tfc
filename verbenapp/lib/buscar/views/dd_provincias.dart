@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:verbenapp/buscar/bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/src2/DAL/models/provincia.dart';
+import 'package:verbenapp/src/DAL/models/provincia.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 class DropDownProvincias2 extends StatelessWidget {

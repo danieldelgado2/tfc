@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'package:verbenapp/src/models/verbena.dart';
+import 'package:verbenapp/buscar/buscar.dart';
 
 class EventoHorizontal extends StatelessWidget {
   final List<Verbena> verbenas;

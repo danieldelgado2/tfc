@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
-import 'package:verbenapp/src/widgets/verbena_horizontal.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/buscar/bloc/bloc.dart';
+import 'package:verbenapp/buscar/views/verbena_horizontal.dart';
 
 import 'dd_provincias.dart';
 

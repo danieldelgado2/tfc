@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:verbenapp/src/models/verbena.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:verbenapp/src/DAL/models/verbena.dart';
 
 class DetallePage extends StatelessWidget {
   @override

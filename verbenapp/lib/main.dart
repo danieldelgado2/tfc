@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:verbenapp/src/bloc/provider.dart';
-import 'package:verbenapp/src/pages/buscar_page.dart';
-import 'package:verbenapp/src/pages/detalle_page.dart';
-import 'package:verbenapp/src/pages/form_page.dart';
-import 'package:verbenapp/src/pages/home_page.dart';
+import 'package:verbenapp/provider.dart';
 
 import 'buscar/views/buscar_page.dart';
+import 'detalle/views/detalle_page.dart';
 import 'form/view/form_page.dart';
+import 'home_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,8 +21,8 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (BuildContext context) => HomePage(),
-          'buscar': (BuildContext context) => BuscarPage2(),
-          'form': (BuildContext context) => FormPage2(),
+          'buscar': (BuildContext context) => BuscarPage(),
+          'form': (BuildContext context) => FormPage(),
           'detalle': (BuildContext context) => DetallePage(),
         },
 
