@@ -96,7 +96,7 @@ class QuitarVerbenas extends FormLocalidadEvent {
 ///
 class ChangeDD extends FormLocalidadEvent {
   const ChangeDD(this.loc);
-  final Localidad loc;
+  final loc;
 
   @override
   List<Object> get props => [loc];

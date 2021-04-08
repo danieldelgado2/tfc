@@ -27,7 +27,7 @@ class FormBusquedaBloc extends Bloc<FormBusquedaEvent, FormBusquedaState> {
       yield FormBusquedaState.loading(location, state.provincia);
 
       if (event is BuscarPorProvincia && !event.celebrandose) {
-        locs = await localidadBL.fromProvincia(state.provincia.nombre);
+        locs = await localidadBL.fromProvName(state.provincia.nombre);
       } else if (event is BuscarPorProvincia && event.celebrandose) {
         locs =
             await localidadBL.delMesPorNombreProvincia(state.provincia.nombre);

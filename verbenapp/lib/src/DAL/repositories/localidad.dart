@@ -23,7 +23,7 @@ class LocalidadRepository {
         .localidades;
   }
 
-  Future<List<Localidad>> fromProvincia(String nombre) async {
+  Future<List<Localidad>> fromProvName(String nombre) async {
     var response = await _localidadesRepository
         .where('provincia', isEqualTo: nombre)
         .getDocuments();

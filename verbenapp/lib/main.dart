@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/form/form.dart';
+import 'package:verbenapp/src/BL/bl.dart';
+import 'package:verbenapp/src/pages/buscar/bloc.dart';
+import 'package:verbenapp/src/pages/detalle/detalle_page.dart';
+import 'package:verbenapp/src/pages/form/bloc.dart';
+import 'package:verbenapp/src/pages/form/form_page.dart';
 
-import 'buscar/bloc/BannerBusqueda/banner_busqueda_bloc.dart';
-import 'buscar/bloc/BannerVisible/banner_visible_bloc.dart';
-import 'buscar/bloc/DropDownProvincias/dropDownProvincias.dart';
-import 'buscar/bloc/FormBusqueda/form_busqueda_bloc.dart';
-import 'buscar/bloc/LocalidadSeleccionada/localidad_seleccionada_bloc.dart';
-import 'buscar/bloc/MapaBusqueda/mapa_busqueda_bloc.dart';
-import 'buscar/views/buscar_page.dart';
-import 'detalle/views/detalle_page.dart';
-import 'form/bloc/DropDownLocalidad/dd_bloc.dart';
-import 'form/bloc/FormLocalidad/form_localidad_bloc.dart';
-import 'form/bloc/FormVerbena/form_verbena_bloc.dart';
-import 'form/view/form_page.dart';
+import 'buscar/buscar_page.dart';
 import 'home_page.dart';
 
 void main() {

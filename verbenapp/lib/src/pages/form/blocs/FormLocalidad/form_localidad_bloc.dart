@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:verbenapp/form/form.dart';
+import 'package:verbenapp/src/DAL/models/localidad.dart';
 
 part 'form_localidad_event.dart';
 part 'form_localidad_state.dart';

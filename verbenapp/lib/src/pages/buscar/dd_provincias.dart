@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verbenapp/buscar/bloc/bloc.dart';
+import 'package:verbenapp/src/pages/buscar/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/DAL/models/provincia.dart';
 import 'package:dropdown_search/dropdown_search.dart';

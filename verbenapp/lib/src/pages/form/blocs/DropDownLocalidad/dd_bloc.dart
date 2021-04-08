@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:verbenapp/form/form.dart';
+
+import '../../bloc.dart';
 
 part 'dd_event.dart';
 part 'dd_state.dart';

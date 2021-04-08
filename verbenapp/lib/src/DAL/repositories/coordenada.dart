@@ -4,6 +4,7 @@ import 'package:verbenapp/src/DAL/repositories/repositories.dart';
 
 class CoordenadaRepository {
   final _coordRepository = Firestore.instance.collection('coordenadas');
+
   Future<List<String>> nombresLocFromUbicacion(double lat, double lng) async =>
       (await _coordRepository.getDocuments())
           .documents

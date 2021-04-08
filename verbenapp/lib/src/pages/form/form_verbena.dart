@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/form/bloc/bloc.dart';
+import 'package:verbenapp/src/pages/form/bloc.dart';
 
 class FormVerbena extends StatelessWidget {
   @override

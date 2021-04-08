@@ -12,8 +12,8 @@ class LocalidadBL {
     return await _localidadRepository.fromLocsName(nombreLocalidadesCercanas);
   }
 
-  Future<List<Localidad>> fromProvincia(String provincia) async =>
-      await _localidadRepository.fromProvincia(provincia);
+  Future<List<Localidad>> fromProvName(String provincia) async =>
+      await _localidadRepository.fromProvName(provincia);
 
   Future<List<Localidad>> delMesPorNombreProvincia(String provincia) async =>
       await _localidadRepository.delMesPorNombreProvincia(provincia);

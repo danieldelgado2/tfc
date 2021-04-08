@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/form/bloc/bloc.dart';
-import 'package:verbenapp/form/view/dd_localidades.dart';
-import 'package:verbenapp/form/view/form_localidad.dart';
-import 'package:verbenapp/form/view/view.dart';
+import 'package:verbenapp/src/pages/form/bloc.dart';
+import 'package:verbenapp/src/pages/form/dd_localidades.dart';
+import 'package:verbenapp/src/pages/form/form_localidad.dart';
+
+import 'form_verbena.dart';
 
 class FormPage extends StatelessWidget {
   @override
