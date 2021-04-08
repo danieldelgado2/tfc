@@ -59,8 +59,10 @@ class FormLocalidadBloc extends Bloc<FormLocalidadEvent, FormLocalidadState> {
     } else if (event is GuardarLocalidad) {
       yield FormLocalidadState.insertRegistro(state.locEditar);
 
-      final result = await localidadBL.insertarLocalidad(state.locEditar);
-      yield FormLocalidadState.success();
+      if (await localidadBL.insertarLocalidad(state.locEditar) != null)
+        yield FormLocalidadState.success();
+      else
+        yield FormLocalidadState.error();
     }
   }
 }

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 
-import '../../bloc.dart';
+import '../../buscar.dart';
 
 part 'form_busqueda_event.dart';
 part 'form_busqueda_state.dart';

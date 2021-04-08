@@ -6,7 +6,8 @@ enum FormLocalidadStatus {
   success,
   quitarV,
   agregarV,
-  changeDD
+  changeDD,
+  error
 }
 
 ///
@@ -52,6 +53,12 @@ class FormLocalidadState {
       : this._(
             status: FormLocalidadStatus.success,
             locEditar: Localidad(verbenas: []));
+
+  // Estado al tener una insercción incorrecta en BD
+  FormLocalidadState.error()
+      : this._(
+          status: FormLocalidadStatus.error,
+        );
 
   final status;
   final locEditar;
