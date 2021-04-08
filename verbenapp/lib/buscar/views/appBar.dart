@@ -53,6 +53,15 @@ class BannerBusqueda extends StatelessWidget {
       width: screenSize.width,
       child: BlocBuilder<BannerBusquedaBloc, BannerBusquedaState>(
         builder: (context, state) {
+          final isPorProvincia =
+              (state.status == BannerBusquedaStatus.porProvincia);
+          void onChangeSwitch(bool value) => (isPorProvincia)
+              ? context
+                  .read<BannerBusquedaBloc>()
+                  .add(PorProvincia(celebrandose: value))
+              : context
+                  .read<BannerBusquedaBloc>()
+                  .add(PorUbicacion(celebrandose: value));
           return Row(
             children: [
               Container(
@@ -67,50 +76,21 @@ class BannerBusqueda extends StatelessWidget {
                         children: [
                           Switch(
                               activeColor: Colors.deepOrangeAccent,
-                              value: (state.status ==
-                                  BannerBusquedaStatus.porUbicacion),
-                              onChanged: (value) {
-                                if (value)
-                                  context.read<BannerBusquedaBloc>().add(
-                                      PorUbicacion(
-                                          celebrandose: state.celebrandose));
-                                else
-                                  context.read<BannerBusquedaBloc>().add(
-                                      PorProvincia(
-                                          celebrandose: state.celebrandose,
-                                          provinciaSelec: state.provincia));
-                              }),
+                              value: !isPorProvincia,
+                              onChanged: (value) => onChangeSwitch(!value)),
                           Switch(
                               activeColor: Colors.deepOrangeAccent,
-                              value: (state.status ==
-                                  BannerBusquedaStatus.porProvincia),
-                              onChanged: (value) {
-                                if (!value)
-                                  context.read<BannerBusquedaBloc>().add(
-                                      PorUbicacion(
-                                          celebrandose: state.celebrandose));
-                                else
-                                  context.read<BannerBusquedaBloc>().add(
-                                      PorProvincia(
-                                          celebrandose: state.celebrandose,
-                                          provinciaSelec: state.provincia));
-                              }),
+                              value: isPorProvincia,
+                              onChanged: (value) => onChangeSwitch(value)),
                           Transform.scale(
                             scale: 1.5,
                             child: Checkbox(
                                 activeColor: Colors.deepOrangeAccent,
                                 value: state.celebrandose,
                                 onChanged: (value) {
-                                  if (state.status ==
-                                      BannerBusquedaStatus.porProvincia) {
-                                    context.read<BannerBusquedaBloc>().add(
-                                        PorProvincia(
-                                            celebrandose: value,
-                                            provinciaSelec: state.provincia));
-                                  }
                                   context
                                       .read<BannerBusquedaBloc>()
-                                      .add(PorUbicacion(celebrandose: value));
+                                      .add(CambiaCheck(celebrandose: value));
                                 }),
                           )
                         ],
@@ -130,9 +110,7 @@ class BannerBusqueda extends StatelessWidget {
                           Container(
                               height: screenSize.height * 0.07,
                               width: screenSize.width * 0.5,
-                              child: SelectProvincias(
-                                  enabled: (state.status ==
-                                      BannerBusquedaStatus.porProvincia))),
+                              child: SelectProvincias(enabled: isPorProvincia)),
                           Padding(padding: EdgeInsets.all(5)),
                           Text(
                             'Próximas',
@@ -147,25 +125,19 @@ class BannerBusqueda extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                child: FloatingActionButton(
-                    heroTag: 'button-save',
-                    child: Icon(
-                      Icons.check,
-                      size: 30,
-                    ),
-                    backgroundColor: Colors.deepOrangeAccent,
-                    onPressed: () =>
-                        (state.status == BannerBusquedaStatus.porProvincia)
-                            ? context.read<FormBusquedaBloc>().add(
-                                BuscarPorProvincia(
-                                    provincia: state.provincia,
-                                    celebrandose: state.celebrandose))
-                            : context.read<FormBusquedaBloc>().add(
-                                BuscarPorUbicacion(
-                                    ubi: state.ubicacion,
-                                    celebrandose: state.celebrandose))),
-              )
+              FloatingActionButton(
+                heroTag: 'button-save',
+                child: Icon(
+                  Icons.check,
+                  size: 30,
+                ),
+                backgroundColor: Colors.deepOrangeAccent,
+                onPressed: () => (isPorProvincia)
+                    ? context.read<FormBusquedaBloc>().add(
+                        BuscarPorProvincia(celebrandose: state.celebrandose))
+                    : context.read<FormBusquedaBloc>().add(
+                        BuscarPorUbicacion(celebrandose: state.celebrandose)),
+              ),
             ],
           );
         },
@@ -180,7 +152,7 @@ class Mapa extends StatefulWidget {
 }
 
 class _MapaState extends State<Mapa> {
-  final List<Marker> marcadores = [];
+  List<Marker> marcadores = [];
 
   final MapController _mapController = MapController();
 
@@ -197,35 +169,40 @@ class _MapaState extends State<Mapa> {
             child: Text('Oops! No hay resultados :('),
           )));
         }
+
+        if (state.status == FormBusquedaStatus.success) {
+          marcadores.clear();
+
+          setState(() {
+            _mapController.move(
+                LatLng(state.provincia.latitud, state.provincia.longitud), 8);
+            marcadores = state.localidades
+                .map(
+                  (l) => Marker(
+                    point: LatLng(l.latitud, l.longitud),
+                    builder: (ctx) => IconButton(
+                      icon: Icon(Icons.emoji_emotions_rounded),
+                      color: Colors.deepOrangeAccent,
+                      onPressed: () {
+                        setState(() {
+                          _mapController.move(
+                            LatLng(l.latitud, l.longitud),
+                            14,
+                          );
+                        });
+                        context
+                            .read<LocalidadSeleccionadaBloc>()
+                            .add(ChangeLoc(data: l));
+                      },
+                    ),
+                  ),
+                )
+                .toList();
+          });
+        }
       },
       child: BlocBuilder<FormBusquedaBloc, FormBusquedaState>(
           builder: (context, state) {
-        if (state.status == FormBusquedaStatus.success) {
-          marcadores.clear();
-          state.localidades.forEach(
-            (l) => marcadores.add(
-              Marker(
-                point: LatLng(l.latitud, l.longitud),
-                builder: (ctx) => IconButton(
-                  icon: Icon(Icons.emoji_emotions_rounded),
-                  color: Colors.deepOrangeAccent,
-                  onPressed: () {
-                    setState(() {
-                      _mapController.move(
-                        LatLng(l.latitud, l.longitud),
-                        6,
-                      );
-                    });
-                    context
-                        .read<LocalidadSeleccionadaBloc>()
-                        .add(ChangeLoc(data: l));
-                  },
-                ),
-              ),
-            ),
-          );
-        }
-
         return FlutterMap(
           mapController: _mapController,
           options: MapOptions(
@@ -326,7 +303,7 @@ class SelectProvincias extends StatelessWidget {
           return CircularProgressIndicator();
         }
 
-        return DropDownProvincias2(
+        return DropDownProvincias(
           provincias: state.provincias,
           enabled: enabled,
         );

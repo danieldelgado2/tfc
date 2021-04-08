@@ -1,4 +1,4 @@
-import 'package:verbenapp/src/BL/repositories/repositories.dart';
+import 'package:verbenapp/src/BL/bl.dart';
 
 class LocalidadBL {
   final _localidadRepository = LocalidadRepository();
@@ -9,19 +9,29 @@ class LocalidadBL {
     var nombreLocalidadesCercanas = await _coordenadaRepository
         .nombresLocFromUbicacion(latitude, longitude);
     if (nombreLocalidadesCercanas.isEmpty) return [];
-    return await _localidadRepository.fromList(nombreLocalidadesCercanas);
+    return await _localidadRepository.fromLocsName(nombreLocalidadesCercanas);
   }
 
   Future<List<Localidad>> fromProvincia(String provincia) async =>
       await _localidadRepository.fromProvincia(provincia);
 
-  Future<List<Localidad>> fromHotProvincia(String provincia) async =>
-      _localidadesEnRangoFecha(
-          await _localidadRepository.fromProvincia(provincia));
-  Future<List<Localidad>> fromHotUbicacion(double lat, double lng) async =>
-      _localidadesEnRangoFecha(await fromUbicacion(lat, lng));
+  Future<List<Localidad>> delMesPorNombreProvincia(String provincia) async =>
+      await _localidadRepository.delMesPorNombreProvincia(provincia);
+
+  Future<List<Localidad>> delMesPorUbicacion(double lat, double lng) async =>
+      _localidadRepository.delMes().then((localidades) => localidades
+          .where((loc) =>
+              Coordenada.fromJson({
+                "localidad": loc.nombre,
+                "latitud": loc.latitud,
+                "longitud": loc.longitud
+              }, lat, lng) !=
+              null)
+          .toList());
+
   Future<List<Localidad>> localidadesDD() async =>
       await _localidadRepository.localidadesDD();
+  Future<List<Localidad>> delMes() async => await _localidadRepository.delMes();
 
   // Future<List<Localidad>> insertarLocalidadesProximas() async {
   //   var response =
@@ -37,25 +47,6 @@ class LocalidadBL {
   //       .setData({"lista": Localidades.toJson(results).localidadesJson});
   //   return results;
   // }
-
-  List<Localidad> _localidadesEnRangoFecha(List<Localidad> localidades) {
-    List<Localidad> results = [];
-    var nextMonth = DateTime.now().add(Duration(days: 30));
-    localidades.forEach((l) {
-      List<Verbena> verbenasResult = [];
-
-      l.verbenas.forEach((v) {
-        var fechaDesdeParse = DateFormat('dd/MM/yyyy').parse(v.desde);
-        var isBefore = fechaDesdeParse.isBefore(nextMonth);
-        if (isBefore) verbenasResult.add(v);
-      });
-      if (verbenasResult.isNotEmpty) {
-        l.verbenas = verbenasResult;
-        results.add(l);
-      }
-    });
-    return results;
-  }
 
   Future<bool> insertarLocalidad(Localidad loc) async =>
       await _localidadRepository.insertarLocalidad(loc);

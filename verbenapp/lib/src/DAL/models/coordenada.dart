@@ -1,21 +1,25 @@
 import 'dart:convert';
 
+import 'dart:math';
+
 class Coordenadas {
   List<Coordenada> coordenadas = [];
 
   Coordenadas();
 
-  Coordenadas.fromJsonList(List<Map<String, dynamic>> jsonList) {
+  Coordenadas.fromJsonList(
+      List<Map<String, dynamic>> jsonList, double lat, double lng) {
     if (jsonList.isEmpty) return;
 
     for (var item in jsonList) {
-      final coordenada = new Coordenada.fromJson(item);
+      final coordenada = new Coordenada.fromJson(item, lat, lng);
       coordenadas.add(coordenada);
     }
   }
-  Coordenadas.fromJson(Map<String, dynamic> json) {
+
+  Coordenadas.fromJson(Map<String, dynamic> json, double lat, double lng) {
     json.forEach((key, value) {
-      final coordenada = Coordenada.fromJson(value);
+      final coordenada = Coordenada.fromJson(value, lat, lng);
       coordenadas.add(coordenada);
     });
   }
@@ -31,17 +35,19 @@ class Coordenada {
   double latitud;
   double longitud;
 
-  factory Coordenada.fromJson(Map<String, dynamic> json) => Coordenada(
-      localidad: json["localidad"],
-      latitud: json['latitud'],
-      longitud: json['longitud']);
+  factory Coordenada.fromJson(
+          Map<String, dynamic> json, double lat, double lng) =>
+      (Point(lat, lng).distanceTo(Point(json['latitud'], json['longitud'])) <=
+              1)
+          ? Coordenada(
+              localidad: json["localidad"],
+              latitud: json['latitud'],
+              longitud: json['longitud'])
+          : null;
 
   Map<String, dynamic> toJson() => {
         "localidad": localidad,
       };
 }
-
-Coordenada coordenadaFromJson(String str) =>
-    Coordenada.fromJson(json.decode(str));
 
 String coordenadaToJson(Coordenada data) => json.encode(data.toJson());

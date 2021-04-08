@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 class Verbenas {
   List<Verbena> verbenas = [];
   List<Map<String, dynamic>> verbenasToJson = [];
@@ -15,6 +17,19 @@ class Verbenas {
       verbena.localidad = localidad;
       verbena.provincia = provincia;
       verbenas.add(verbena);
+    }
+  }
+  Verbenas.fromJsonListToProximas(
+      List<dynamic> jsonList, String localidad, String provincia) {
+    if (jsonList.isEmpty) return;
+
+    for (var item in jsonList) {
+      var verbena;
+      if ((verbena = Verbena.fromJsonToProximas(item)) != null) {
+        verbena.localidad = localidad;
+        verbena.provincia = provincia;
+        verbenas.add(verbena);
+      }
     }
   }
   Verbenas.fromJson(Map<String, dynamic> json) {
@@ -65,6 +80,20 @@ class Verbena {
       nombre: json["nombre"],
       url: json['url'],
       img: json['img']);
+  factory Verbena.fromJsonToProximas(Map<dynamic, dynamic> json) {
+    var nextMonth = DateTime.now().add(Duration(days: 30));
+    var fechaDesdeParse = DateFormat('dd/MM/yyyy').parse(json['desde']);
+    var isBefore = fechaDesdeParse.isBefore(nextMonth);
+    if (isBefore)
+      return Verbena(
+          hasta: json['hasta'],
+          descripcion: json["descripcion"],
+          desde: json["desde"],
+          nombre: json["nombre"],
+          url: json['url'],
+          img: json['img']);
+    return null;
+  }
 
   toJson() => {
         "descripcion": descripcion,
@@ -87,7 +116,7 @@ class Verbena {
     if (detailImg == null) {
       return 'https://miro.medium.com/max/10000/0*h7lBavOZfiphLHuX';
     } else {
-      return '$detailImg';
+      return detailImg;
     }
   }
 }

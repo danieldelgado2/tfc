@@ -7,21 +7,22 @@ abstract class FormBusquedaEvent {
 }
 
 class BuscarPorProvincia extends FormBusquedaEvent {
-  const BuscarPorProvincia({this.provincia, this.celebrandose});
-  final provincia;
+  const BuscarPorProvincia({this.celebrandose});
   final celebrandose;
   @override
-  List<Object> get props => [provincia, celebrandose];
+  List<Object> get props => [celebrandose];
 }
 
 class BuscarPorUbicacion extends FormBusquedaEvent {
-  const BuscarPorUbicacion({this.ubi, this.celebrandose});
-  final ubi;
+  const BuscarPorUbicacion({this.celebrandose});
   final celebrandose;
   @override
-  List<Object> get props => [ubi, celebrandose];
+  List<Object> get props => [celebrandose];
 }
 
-class Buscar extends FormBusquedaEvent {
-  const Buscar();
+class CambiaProvincia extends FormBusquedaEvent {
+  const CambiaProvincia({this.provincia});
+  final provincia;
+  @override
+  List<Object> get props => [provincia];
 }

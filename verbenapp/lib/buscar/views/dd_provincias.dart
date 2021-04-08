@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/DAL/models/provincia.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
-class DropDownProvincias2 extends StatelessWidget {
+class DropDownProvincias extends StatelessWidget {
   final List<Provincia> provincias;
   final bool enabled;
 
   final List<Provincia> results = [];
 
-  DropDownProvincias2({@required this.provincias, @required this.enabled});
+  DropDownProvincias({@required this.provincias, @required this.enabled});
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<Provincia>(
@@ -45,43 +45,9 @@ class DropDownProvincias2 extends StatelessWidget {
       items: provincias,
       itemAsString: (Provincia p) => p.nombre,
       onChanged: (value) {
-        context
-            .read<BannerBusquedaBloc>()
-            .add(PorProvincia(provinciaSelec: value, celebrandose: null));
+        context.read<FormBusquedaBloc>().add(CambiaProvincia(provincia: value));
       },
       dropDownButton: Text(''),
     );
   }
 }
-
-// final bloc = Provider.ofFormMapa(context);
-//   var _onChange;
-
-//   if (!disabled) {
-//     _onChange = (Provincia value) {
-//       var lista = bloc.provinciasDropdownValue;
-//       lista.removeAt(lista.indexOf(value));
-//       lista.insert(0, value);
-//       bloc.changeProvinciasDropDown(lista);
-//     };
-//   }
-
-//   return Container(
-//     child: DropdownButton<Provincia>(
-//       value: provincias[0],
-//       icon: Icon(
-//         Icons.arrow_drop_down_circle_rounded,
-//         color: Colors.deepPurpleAccent,
-//       ),
-//       iconSize: 30,
-//       elevation: 16,
-//       style: TextStyle(fontSize: 25, color: Colors.black),
-//       onChanged: _onChange,
-//       items: provincias.map<DropdownMenuItem<Provincia>>((Provincia value) {
-//         return DropdownMenuItem<Provincia>(
-//           value: value,
-//           child: Text(value.nombre),
-//         );
-//       }).toList(),
-//     ),
-//   );

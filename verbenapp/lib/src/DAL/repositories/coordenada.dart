@@ -3,18 +3,10 @@ import 'package:verbenapp/src/DAL/models/models.dart';
 import 'package:verbenapp/src/DAL/repositories/repositories.dart';
 
 class CoordenadaRepository {
-  Future<List<String>> nombresLocFromUbicacion(double lat, double lng) async {
-    var request =
-        await Firestore.instance.collection('coordenadas').getDocuments();
-
-    var results = <String>[];
-    Coordenadas.fromJsonList(
-            request.documents.map((coord) => coord.data).toList())
-        .coordenadas
-        .forEach((coord) {
-      if (Point(lat, lng).distanceTo(Point(coord.latitud, coord.longitud)) <= 1)
-        results.add(coord.localidad);
-    });
-    return results;
-  }
+  final _coordRepository = Firestore.instance.collection('coordenadas');
+  Future<List<String>> nombresLocFromUbicacion(double lat, double lng) async =>
+      (await _coordRepository.getDocuments())
+          .documents
+          .map((e) => Coordenada.fromJson(e.data, lat, lng).localidad)
+          .toList();
 }

@@ -27,6 +27,16 @@ class Localidades {
       localidades.add(localidad);
     }
   }
+  Localidades.fromDocumentsListToProximas(List<DocumentSnapshot> documents) {
+    if (documents.isEmpty) return;
+
+    for (var item in documents) {
+      final localidad = new Localidad.fromJsonToProximas(item.data);
+
+      localidad.id = item.reference.documentID;
+      localidades.add(localidad);
+    }
+  }
   Localidades.fromJsonListSinVerbenas(List<Map<String, dynamic>> jsonList) {
     if (jsonList.isEmpty) return;
 
@@ -74,6 +84,14 @@ class Localidad {
       latitud: json['latitud'],
       longitud: json['longitud'],
       verbenas: List<Verbena>.from(Verbenas.fromJsonList(
+              json["verbenas"], json["nombre"], json['provincia'])
+          .verbenas));
+  factory Localidad.fromJsonToProximas(Map<String, dynamic> json) => Localidad(
+      nombre: json["nombre"],
+      provincia: json['provincia'],
+      latitud: json['latitud'],
+      longitud: json['longitud'],
+      verbenas: List<Verbena>.from(Verbenas.fromJsonListToProximas(
               json["verbenas"], json["nombre"], json['provincia'])
           .verbenas));
   factory Localidad.fromJsonSinVerbenas(Map<String, dynamic> json) => Localidad(

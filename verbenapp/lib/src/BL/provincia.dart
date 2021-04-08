@@ -1,4 +1,4 @@
-import 'package:verbenapp/src/BL/repositories/repositories.dart';
+import 'package:verbenapp/src/BL/bl.dart';
 
 class ProvinciaBL {
   final _provinciaRepository = ProvinciaRepository();
