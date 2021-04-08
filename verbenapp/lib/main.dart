@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/BL/bl.dart';
 import 'package:verbenapp/src/pages/buscar/bloc.dart';
+import 'package:verbenapp/src/pages/buscar/buscar_page.dart';
 import 'package:verbenapp/src/pages/detalle/detalle_page.dart';
 import 'package:verbenapp/src/pages/form/bloc.dart';
 import 'package:verbenapp/src/pages/form/form_page.dart';
 
-import 'buscar/buscar_page.dart';
 import 'home_page.dart';
 
 void main() {
