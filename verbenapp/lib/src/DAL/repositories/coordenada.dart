@@ -5,9 +5,14 @@ import 'package:verbenapp/src/DAL/repositories/repositories.dart';
 class CoordenadaRepository {
   final _coordRepository = Firestore.instance.collection('coordenadas');
 
-  Future<List<String>> nombresLocFromUbicacion(double lat, double lng) async =>
-      (await _coordRepository.getDocuments())
-          .documents
-          .map((e) => Coordenada.fromJson(e.data, lat, lng).localidad)
-          .toList();
+  Future<List<String>> nombresLocFromUbicacion(double lat, double lng) async {
+    var results = <String>[];
+    var coord;
+
+    (await _coordRepository.getDocuments()).documents.forEach((d) {
+      if ((coord = Coordenada.fromJson(d.data, lat, lng)) != null)
+        results.add(coord.localidad);
+    });
+    return results;
+  }
 }

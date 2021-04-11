@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:verbenapp/src/DAL/models/models.dart';
 
 class Localidades {
@@ -9,7 +10,7 @@ class Localidades {
 
   Localidades();
 
-  Localidades.fromJsonList(List<Map<String, dynamic>> jsonList) {
+  Localidades.fromJsonList(List<dynamic> jsonList) {
     if (jsonList.isEmpty) return;
 
     for (var item in jsonList) {
@@ -37,14 +38,7 @@ class Localidades {
       localidades.add(localidad);
     }
   }
-  Localidades.fromJsonListSinVerbenas(List<Map<String, dynamic>> jsonList) {
-    if (jsonList.isEmpty) return;
 
-    for (var item in jsonList) {
-      final localidad = new Localidad.fromJsonSinVerbenas(item);
-      localidades.add(localidad);
-    }
-  }
   Localidades.fromJson(Map<String, dynamic> json) {
     json.forEach((key, value) {
       final localidad = Localidad.fromJson(value);
@@ -77,8 +71,9 @@ class Localidad {
   double longitud;
   double latitud;
   List<Verbena> verbenas;
+  Marker marcador;
 
-  factory Localidad.fromJson(Map<String, dynamic> json) => Localidad(
+  factory Localidad.fromJson(dynamic json) => Localidad(
       nombre: json["nombre"],
       provincia: json['provincia'],
       latitud: json['latitud'],
@@ -94,12 +89,6 @@ class Localidad {
       verbenas: List<Verbena>.from(Verbenas.fromJsonListToProximas(
               json["verbenas"], json["nombre"], json['provincia'])
           .verbenas));
-  factory Localidad.fromJsonSinVerbenas(Map<String, dynamic> json) => Localidad(
-      nombre: json["nombre"],
-      provincia: json['provincia'],
-      latitud: json['latitud'],
-      longitud: json['longitud'],
-      verbenas: []);
 
   Map<String, dynamic> toJson() => {
         "nombre": nombre,

@@ -15,7 +15,7 @@ class LocalidadRepository {
 
   Future<List<Localidad>> fromLocsName(List<String> localidades) async {
     var request = await _localidadesRepository
-        .where('nombre', arrayContainsAny: localidades)
+        .where('nombre', whereIn: localidades)
         .getDocuments();
 
     return Localidades.fromJsonList(
@@ -33,7 +33,7 @@ class LocalidadRepository {
         .localidades;
   }
 
-  Future<List<Localidad>> delMes() async => Localidades.fromJson(
+  Future<List<Localidad>> delMes() async => Localidades.fromJsonList(
           (await _localidadesProximasRepository.get()).data['lista'])
       .localidades;
 

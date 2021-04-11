@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:verbenapp/src/DAL/models/localidad.dart';
+
 class Provincias {
   List<Provincia> provincias = [];
 
@@ -25,16 +27,22 @@ class Provincias {
 //     final verbena = verbenaFromJson(jsonString);
 
 class Provincia {
-  Provincia({this.nombre = '', this.latitud = 0.0, this.longitud = 0.0});
+  Provincia(
+      {this.nombre = '',
+      this.latitud = 0.0,
+      this.longitud = 0.0,
+      this.localidades = const <Localidad>[]});
 
   String nombre;
   double latitud;
   double longitud;
+  List<Localidad> localidades;
 
   factory Provincia.fromJson(Map<String, dynamic> json) => Provincia(
       nombre: json["nombre"],
       latitud: json['latitud'],
-      longitud: json['longitud']);
+      longitud: json['longitud'],
+      localidades: <Localidad>[]);
 
   Map<String, dynamic> toJson() => {
         "nombre": nombre,

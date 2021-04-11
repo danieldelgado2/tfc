@@ -36,12 +36,6 @@ class MyApp extends StatelessWidget {
         BlocProvider<LocalidadSeleccionadaBloc>(
           create: (BuildContext context) => LocalidadSeleccionadaBloc(),
         ),
-        BlocProvider<BannerBusquedaBloc>(
-          create: (BuildContext context) => BannerBusquedaBloc(),
-        ),
-        BlocProvider<MapaBusquedaBloc>(
-          create: (BuildContext context) => MapaBusquedaBloc(),
-        ),
         BlocProvider<DDBloc>(
           create: (BuildContext context) => DDBloc(localidadBL: _localidadBL),
         ),

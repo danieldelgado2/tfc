@@ -1,5 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/DAL/models/verbena.dart';
+
+import 'blocs/LocalidadSeleccionada/localidad_seleccionada_bloc.dart';
+
+class ContainerVerbenas extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _screenSize = MediaQuery.of(context).size;
+    return BlocBuilder<LocalidadSeleccionadaBloc, LocalidadSeleccionadaState>(
+      builder: (context, state) {
+        if (state.localidad == null) {
+          return Center(
+            child: Text(
+                'Activa tu ubicación o elige una ciudad para ver sus fiestas'),
+          );
+        } else {
+          return Container(
+            width: _screenSize.width,
+            child: Column(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      state.localidad.nombre,
+                      style: TextStyle(
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepOrangeAccent),
+                    ),
+                  ),
+                ),
+                EventoHorizontal(
+                    verbenas: state.localidad.verbenas,
+                    altura: _screenSize.height * 0.4,
+                    ancho: _screenSize.width)
+              ],
+            ),
+          );
+        }
+      },
+    );
+  }
+}
 
 class EventoHorizontal extends StatelessWidget {
   final List<Verbena> verbenas;

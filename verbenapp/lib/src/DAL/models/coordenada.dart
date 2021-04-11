@@ -38,7 +38,7 @@ class Coordenada {
   factory Coordenada.fromJson(
           Map<String, dynamic> json, double lat, double lng) =>
       (Point(lat, lng).distanceTo(Point(json['latitud'], json['longitud'])) <=
-              1)
+              0.8)
           ? Coordenada(
               localidad: json["localidad"],
               latitud: json['latitud'],

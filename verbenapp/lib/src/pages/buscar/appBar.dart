@@ -4,7 +4,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/pages/buscar/bloc.dart';
-import 'package:verbenapp/src/pages/buscar/verbena_horizontal.dart';
 
 import 'dd_provincias.dart';
 
@@ -15,7 +14,7 @@ class AppBarMapa extends StatelessWidget {
     return Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: [
-        Mapa(),
+        Mapa(sc: _sc),
         BannerDinamico(
           screenSize: _sc,
         ),
@@ -34,7 +33,7 @@ class BannerDinamico extends StatelessWidget {
     return BlocBuilder<BannerVisibleBloc, BannerVisibleState>(
       builder: (context, state) {
         return AnimatedPositioned(
-          right: state.visible ? 0 : screenSize.width,
+          right: state.visible ? screenSize.width : 0,
           top: screenSize.height * 0.04,
           duration: const Duration(seconds: 1),
           curve: Curves.fastOutSlowIn,
@@ -45,24 +44,42 @@ class BannerDinamico extends StatelessWidget {
   }
 }
 
-class BannerBusqueda extends StatelessWidget {
+class BannerBusqueda extends StatefulWidget {
+  @override
+  _BannerBusquedaState createState() => _BannerBusquedaState();
+}
+
+class _BannerBusquedaState extends State<BannerBusqueda> {
+  bool isPorProvincia = true;
+  bool celebrandose = false;
+  Provincia provincia;
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Container(
-      width: screenSize.width,
-      child: BlocBuilder<BannerBusquedaBloc, BannerBusquedaState>(
-        builder: (context, state) {
-          final isPorProvincia =
-              (state.status == BannerBusquedaStatus.porProvincia);
-          void onChangeSwitch(bool value) => (isPorProvincia)
-              ? context
-                  .read<BannerBusquedaBloc>()
-                  .add(PorProvincia(celebrandose: value))
-              : context
-                  .read<BannerBusquedaBloc>()
-                  .add(PorUbicacion(celebrandose: value));
-          return Row(
+        width: screenSize.width,
+        child: BlocListener<FormBusquedaBloc, FormBusquedaState>(
+          listener: (context, state) {
+            if (state.status == FormBusquedaStatus.invalid) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.deepOrangeAccent,
+                content: Text('Activa tu ubicación o elige una provincia',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              ));
+            } else if (state.status == FormBusquedaStatus.porProvincia) {
+              setState(() {
+                provincia = state.provincia;
+              });
+            }
+
+            setState(() {
+              isPorProvincia = state.ubicacion == null;
+              celebrandose = state.checkValue;
+            });
+          },
+          child: Row(
             children: [
               Container(
                 width: screenSize.width * 0.68,
@@ -75,22 +92,32 @@ class BannerBusqueda extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Switch(
-                              activeColor: Colors.deepOrangeAccent,
-                              value: !isPorProvincia,
-                              onChanged: (value) => onChangeSwitch(!value)),
+                            activeColor: Colors.deepOrangeAccent,
+                            value: !isPorProvincia,
+                            onChanged: (val) => (val)
+                                ? BlocProvider.of<FormBusquedaBloc>(context)
+                                    .add(PorUbicacion())
+                                : BlocProvider.of<FormBusquedaBloc>(context)
+                                    .add(PorProvincia(provincia: provincia)),
+                          ),
                           Switch(
-                              activeColor: Colors.deepOrangeAccent,
-                              value: isPorProvincia,
-                              onChanged: (value) => onChangeSwitch(value)),
+                            activeColor: Colors.deepOrangeAccent,
+                            value: isPorProvincia,
+                            onChanged: (val) => (val)
+                                ? BlocProvider.of<FormBusquedaBloc>(context)
+                                    .add(PorProvincia(provincia: provincia))
+                                : BlocProvider.of<FormBusquedaBloc>(context)
+                                    .add(PorUbicacion()),
+                          ),
                           Transform.scale(
                             scale: 1.5,
                             child: Checkbox(
                                 activeColor: Colors.deepOrangeAccent,
-                                value: state.celebrandose,
+                                value: celebrandose,
                                 onChanged: (value) {
                                   context
-                                      .read<BannerBusquedaBloc>()
-                                      .add(CambiaCheck(celebrandose: value));
+                                      .read<FormBusquedaBloc>()
+                                      .add(CambiaCheck(value: value));
                                 }),
                           )
                         ],
@@ -132,93 +159,116 @@ class BannerBusqueda extends StatelessWidget {
                   size: 30,
                 ),
                 backgroundColor: Colors.deepOrangeAccent,
-                onPressed: () => (isPorProvincia)
-                    ? context.read<FormBusquedaBloc>().add(
-                        BuscarPorProvincia(celebrandose: state.celebrandose))
-                    : context.read<FormBusquedaBloc>().add(
-                        BuscarPorUbicacion(celebrandose: state.celebrandose)),
+                onPressed: () => context.read<FormBusquedaBloc>().add(Buscar()),
               ),
             ],
-          );
-        },
-      ),
-    );
+          ),
+        ));
   }
 }
 
 class Mapa extends StatefulWidget {
+  final sc;
+
+  Mapa({this.sc});
   @override
-  _MapaState createState() => _MapaState();
+  _MapaState createState() => _MapaState(sc: sc);
 }
 
 class _MapaState extends State<Mapa> {
   List<Marker> marcadores = [];
-
+  _MapaState({this.sc});
+  final sc;
   final MapController _mapController = MapController();
+  LatLng _location;
+  Provincia provincia;
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<FormBusquedaBloc, FormBusquedaState>(
-      listener: (context, state) {
-        if (state.status == FormBusquedaStatus.empty) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Container(
-            height: 100,
-            width: 400,
-            color: Colors.deepOrangeAccent,
-            child: Text('Oops! No hay resultados :('),
-          )));
-        }
-
-        if (state.status == FormBusquedaStatus.success) {
-          marcadores.clear();
-
+        listener: (context, state) {
+      if (state.status == FormBusquedaStatus.empty) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.deepOrangeAccent,
+          content: Text('Oops! No hay resultados :(',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        ));
+      } else if (state.provincia != null || state.ubicacion != null) {
+        List<Localidad> localidades = [];
+        List<Marker> markers = <Marker>[];
+        if (state.provincia != null) {
           setState(() {
-            _mapController.move(
-                LatLng(state.provincia.latitud, state.provincia.longitud), 8);
-            marcadores = state.localidades
-                .map(
-                  (l) => Marker(
-                    point: LatLng(l.latitud, l.longitud),
-                    builder: (ctx) => IconButton(
-                      icon: Icon(Icons.emoji_emotions_rounded),
-                      color: Colors.deepOrangeAccent,
-                      onPressed: () {
-                        setState(() {
-                          _mapController.move(
-                            LatLng(l.latitud, l.longitud),
-                            14,
-                          );
-                        });
-                        context
-                            .read<LocalidadSeleccionadaBloc>()
-                            .add(ChangeLoc(data: l));
-                      },
-                    ),
-                  ),
-                )
-                .toList();
+            provincia = state.provincia;
           });
+          localidades = provincia.localidades;
+          _mapController.move(LatLng(provincia.latitud, provincia.longitud), 8);
+        } else {
+          if (_location == null) _location = state.ubicacion.coord;
+          localidades = state.ubicacion.localidades;
+          markers = [
+            Marker(
+              point: _location,
+              builder: (ctx) => IconButton(
+                icon: Icon(Icons.accessibility),
+                color: Colors.deepOrangeAccent,
+                iconSize: 30,
+                onPressed: () {
+                  setState(() {
+                    _mapController.move(
+                      LatLng(_location.latitude, _location.longitude),
+                      14,
+                    );
+                  });
+                },
+              ),
+            ),
+          ];
+
+          _mapController.move(markers[0].point, 8);
         }
-      },
-      child: BlocBuilder<FormBusquedaBloc, FormBusquedaState>(
-          builder: (context, state) {
-        return FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-              center: LatLng(36.716667, -4.416667),
-              zoom: 6,
-              controller: _mapController),
-          layers: [
-            TileLayerOptions(
-                urlTemplate:
-                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                subdomains: ['a', 'b', 'c']),
-            MarkerLayerOptions(markers: marcadores),
-          ],
+
+        localidades.forEach(
+          (l) => markers.add(Marker(
+            point: LatLng(l.latitud, l.longitud),
+            builder: (ctx) => IconButton(
+              icon: Icon(Icons.emoji_emotions_rounded),
+              color: Colors.deepOrangeAccent,
+              iconSize: 30,
+              onPressed: () {
+                setState(() {
+                  _mapController.move(
+                    LatLng(l.latitud, l.longitud),
+                    14,
+                  );
+                });
+                context
+                    .read<LocalidadSeleccionadaBloc>()
+                    .add(ChangeLoc(data: l));
+              },
+            ),
+          )),
         );
-      }),
-    );
+
+        setState(() {
+          marcadores = markers;
+        });
+      }
+    }, child: BlocBuilder<FormBusquedaBloc, FormBusquedaState>(
+            builder: (context, state) {
+      return FlutterMap(
+        mapController: _mapController,
+        options: MapOptions(
+            center: LatLng(36.716667, -4.416667),
+            zoom: 6,
+            controller: _mapController),
+        layers: [
+          TileLayerOptions(
+              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+              subdomains: ['a', 'b', 'c']),
+          MarkerLayerOptions(markers: marcadores),
+        ],
+      );
+    }));
   }
 }
 
@@ -239,48 +289,8 @@ class BotonBusqueda extends StatelessWidget {
               size: 30,
             ),
             backgroundColor: Colors.deepOrangeAccent,
-            onPressed: () => context
-                .read<BannerVisibleBloc>()
+            onPressed: () => BlocProvider.of<BannerVisibleBloc>(context)
                 .add(BannerVisibleEvent(!state.visible)),
-          ),
-        );
-      },
-    );
-  }
-}
-
-class ContainerVerbenas extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final _screenSize = MediaQuery.of(context).size;
-    return BlocBuilder<LocalidadSeleccionadaBloc, LocalidadSeleccionadaState>(
-      builder: (context, state) {
-        if (state.status == LocalidadSeleccionadaStatus.initial) {
-          return Center(
-            child: Text('Selecciona una localidad para ver sus fiestas'),
-          );
-        }
-        return Container(
-          width: _screenSize.width,
-          child: Column(
-            children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    '${state.localidad.nombre}',
-                    style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepOrangeAccent),
-                  ),
-                ),
-              ),
-              EventoHorizontal(
-                  verbenas: state.localidad.verbenas,
-                  altura: _screenSize.height * 0.4,
-                  ancho: _screenSize.width)
-            ],
           ),
         );
       },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:verbenapp/src/pages/buscar/verbena_horizontal.dart';
 import 'appBar.dart';
 
 class BuscarPage extends StatelessWidget {

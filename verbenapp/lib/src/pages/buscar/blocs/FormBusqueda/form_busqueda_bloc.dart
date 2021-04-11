@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:latlong/latlong.dart';
+import 'package:verbenapp/src/DAL/models/ubicacion.dart';
 
 import '../../buscar.dart';
 
@@ -13,41 +15,77 @@ class FormBusquedaBloc extends Bloc<FormBusquedaEvent, FormBusquedaState> {
 
   final LocalidadBL localidadBL;
   final MapaBL mapaBL;
-  LocationData location;
+  LocationData _location;
 
   @override
   Stream<FormBusquedaState> mapEventToState(
     FormBusquedaEvent event,
   ) async* {
     if (event is CambiaProvincia) {
-      yield FormBusquedaState.changing(
-          event.provincia, state.ubicacion, state.localidades);
-    } else {
-      var locs;
-      yield FormBusquedaState.loading(location, state.provincia);
-
-      if (event is BuscarPorProvincia && !event.celebrandose) {
-        locs = await localidadBL.fromProvName(state.provincia.nombre);
-      } else if (event is BuscarPorProvincia && event.celebrandose) {
-        locs =
-            await localidadBL.delMesPorNombreProvincia(state.provincia.nombre);
-      } else if (event is BuscarPorUbicacion) {
-        if ((location = await mapaBL.getLocation()) == null)
-          yield FormBusquedaState.invalid();
-        else {
-          if (event.celebrandose) {
-            locs = await localidadBL.delMesPorUbicacion(
-                location.latitude, location.longitude);
-          } else {
-            locs = await localidadBL.fromUbicacion(
-                location.latitude, location.longitude);
-          }
-        }
-      }
-      if (locs.isEmpty)
-        yield FormBusquedaState.invalid();
+      yield FormBusquedaState.porProvincia(event.provincia, state.checkValue);
+    } else if (event is PorProvincia) {
+      if (event.provincia != null)
+        yield FormBusquedaState.porProvincia(state.provincia, state.checkValue);
       else
-        yield FormBusquedaState.success(locs, state.provincia);
+        yield FormBusquedaState.invalid();
+    } else if (event is PorUbicacion) {
+      if (_location == null) _location = await mapaBL.getLocation();
+      if (_location != null)
+        yield FormBusquedaState.porUbicacion(
+            Ubicacion(
+                coord: LatLng(_location.latitude, _location.longitude),
+                localidades: <Localidad>[]),
+            state.checkValue);
+      else
+        yield FormBusquedaState.invalid();
+    } else if (event is CambiaCheck) {
+      if (state.ubicacion != null)
+        yield FormBusquedaState.porUbicacion(state.ubicacion, event.value);
+      else if (state.provincia != null)
+        yield FormBusquedaState.porProvincia(state.provincia, event.value);
+      else
+        yield FormBusquedaState.invalid();
+    } else {
+      switch (state.status) {
+        case FormBusquedaStatus.porProvincia:
+          if (!state.checkValue)
+            state.provincia.localidades =
+                await localidadBL.fromProvName(state.provincia.nombre);
+          else
+            state.provincia.localidades = await localidadBL
+                .delMesPorNombreProvincia(state.provincia.nombre);
+
+          if (state.provincia.localidades.isEmpty) {
+            yield FormBusquedaState.empty(
+                state.checkValue, state.provincia, null);
+            break;
+          }
+          yield FormBusquedaState.porProvincia(
+              state.provincia, state.checkValue);
+          break;
+
+        case FormBusquedaStatus.porUbicacion:
+          if (!state.checkValue)
+            state.ubicacion.localidades = await localidadBL.fromUbicacion(
+                state.ubicacion.coord.latitude,
+                state.ubicacion.coord.longitude);
+          else
+            state.ubicacion.localidades = await localidadBL.delMesPorUbicacion(
+                state.ubicacion.coord.latitude,
+                state.ubicacion.coord.longitude);
+          if (state.ubicacion.localidades.isEmpty) {
+            yield FormBusquedaState.empty(
+                state.checkValue, null, state.ubicacion);
+            break;
+          }
+          yield FormBusquedaState.porUbicacion(
+              state.ubicacion, state.checkValue);
+          break;
+
+        case FormBusquedaStatus.invalid:
+          yield FormBusquedaState.invalid();
+          break;
+      }
     }
   }
 }
