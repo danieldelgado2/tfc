@@ -23,9 +23,12 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<FormBusquedaBloc>(
-          create: (BuildContext context) =>
-              FormBusquedaBloc(_localidadBL, _mapaBL),
+          create: (BuildContext context) => FormBusquedaBloc(
+            _localidadBL,
+          ),
         ),
+        BlocProvider<BannerBusquedaBloc>(
+            create: (context) => BannerBusquedaBloc(mapaBL: _mapaBL)),
         BlocProvider<BannerVisibleBloc>(
           create: (BuildContext context) => BannerVisibleBloc(),
         ),

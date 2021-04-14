@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
@@ -53,31 +55,39 @@ class _BannerBusquedaState extends State<BannerBusqueda> {
   bool isPorProvincia = true;
   bool celebrandose = false;
   Provincia provincia;
+  LocationData ubicacion;
+  var onPressed;
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Container(
         width: screenSize.width,
-        child: BlocListener<FormBusquedaBloc, FormBusquedaState>(
+        child: BlocListener<BannerBusquedaBloc, BannerBusquedaState>(
           listener: (context, state) {
-            if (state.status == FormBusquedaStatus.invalid) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                backgroundColor: Colors.deepOrangeAccent,
-                content: Text('Activa tu ubicación o elige una provincia',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-              ));
-            } else if (state.status == FormBusquedaStatus.porProvincia) {
+            if (state.status == BannerBusquedaStatus.invalid) {
               setState(() {
-                provincia = state.provincia;
+                onPressed = null;
               });
+            } else {
+              if (isPorProvincia) {
+                setState(() {
+                  if (state.provincia != null) provincia = state.provincia;
+                  onPressed = () => context.read<FormBusquedaBloc>().add(
+                      FormBusquedaEvent(
+                          ubi: ubicacion,
+                          prov: provincia,
+                          byDelMes: celebrandose));
+                });
+              } else {
+                setState(() {
+                  if (state.ubicacion != null) ubicacion = state.ubicacion;
+                  onPressed = () => context.read<FormBusquedaBloc>().add(
+                      FormBusquedaEvent(
+                          ubi: ubicacion, prov: null, byDelMes: celebrandose));
+                });
+              }
             }
-
-            setState(() {
-              isPorProvincia = state.ubicacion == null;
-              celebrandose = state.checkValue;
-            });
           },
           child: Row(
             children: [
@@ -92,32 +102,35 @@ class _BannerBusquedaState extends State<BannerBusqueda> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Switch(
-                            activeColor: Colors.deepOrangeAccent,
-                            value: !isPorProvincia,
-                            onChanged: (val) => (val)
-                                ? BlocProvider.of<FormBusquedaBloc>(context)
-                                    .add(PorUbicacion())
-                                : BlocProvider.of<FormBusquedaBloc>(context)
-                                    .add(PorProvincia(provincia: provincia)),
-                          ),
+                              activeColor: Colors.deepOrangeAccent,
+                              value: !isPorProvincia,
+                              onChanged: (val) {
+                                setState(() {
+                                  isPorProvincia = !val;
+                                });
+                                _onChangeSwitch(context);
+                              }),
                           Switch(
-                            activeColor: Colors.deepOrangeAccent,
-                            value: isPorProvincia,
-                            onChanged: (val) => (val)
-                                ? BlocProvider.of<FormBusquedaBloc>(context)
-                                    .add(PorProvincia(provincia: provincia))
-                                : BlocProvider.of<FormBusquedaBloc>(context)
-                                    .add(PorUbicacion()),
-                          ),
+                              activeColor: Colors.deepOrangeAccent,
+                              value: isPorProvincia,
+                              onChanged: (val) {
+                                setState(() {
+                                  isPorProvincia = val;
+                                });
+                                _onChangeSwitch(context);
+                              }),
                           Transform.scale(
                             scale: 1.5,
                             child: Checkbox(
                                 activeColor: Colors.deepOrangeAccent,
                                 value: celebrandose,
                                 onChanged: (value) {
+                                  setState(() {
+                                    celebrandose = value;
+                                  });
                                   context
-                                      .read<FormBusquedaBloc>()
-                                      .add(CambiaCheck(value: value));
+                                      .read<BannerBusquedaBloc>()
+                                      .add(CambiaCheck(value: celebrandose));
                                 }),
                           )
                         ],
@@ -153,17 +166,37 @@ class _BannerBusquedaState extends State<BannerBusqueda> {
                 ),
               ),
               FloatingActionButton(
-                heroTag: 'button-save',
-                child: Icon(
-                  Icons.check,
-                  size: 30,
-                ),
-                backgroundColor: Colors.deepOrangeAccent,
-                onPressed: () => context.read<FormBusquedaBloc>().add(Buscar()),
-              ),
+                  heroTag: 'button-save',
+                  child: Icon(
+                    Icons.check,
+                    size: 30,
+                  ),
+                  backgroundColor: Colors.deepOrangeAccent,
+                  onPressed: () {
+                    (onPressed == null)
+                        ? ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              backgroundColor: Colors.deepOrangeAccent,
+                              content: Text(
+                                'Activa tu ubicación o elige una provincia',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20),
+                              ),
+                            ),
+                          )
+                        : onPressed();
+                  }),
             ],
           ),
         ));
+  }
+
+  _onChangeSwitch(context) {
+    (isPorProvincia)
+        ? BlocProvider.of<BannerBusquedaBloc>(context)
+            .add(PorProvincia(provincia: provincia))
+        : BlocProvider.of<BannerBusquedaBloc>(context)
+            .add(PorUbicacion(ubicacion: ubicacion));
   }
 }
 
@@ -180,95 +213,116 @@ class _MapaState extends State<Mapa> {
   _MapaState({this.sc});
   final sc;
   final MapController _mapController = MapController();
-  LatLng _location;
+  LocationData _location;
   Provincia provincia;
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<FormBusquedaBloc, FormBusquedaState>(
-        listener: (context, state) {
-      if (state.status == FormBusquedaStatus.empty) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.deepOrangeAccent,
-          content: Text('Oops! No hay resultados :(',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-        ));
-      } else if (state.provincia != null || state.ubicacion != null) {
-        List<Localidad> localidades = [];
-        List<Marker> markers = <Marker>[];
-        if (state.provincia != null) {
-          setState(() {
-            provincia = state.provincia;
-          });
-          localidades = provincia.localidades;
-          _mapController.move(LatLng(provincia.latitud, provincia.longitud), 8);
-        } else {
-          if (_location == null) _location = state.ubicacion.coord;
-          localidades = state.ubicacion.localidades;
-          markers = [
-            Marker(
-              point: _location,
-              builder: (ctx) => IconButton(
-                icon: Icon(Icons.accessibility),
-                color: Colors.deepOrangeAccent,
-                iconSize: 30,
-                onPressed: () {
-                  setState(() {
-                    _mapController.move(
-                      LatLng(_location.latitude, _location.longitude),
-                      14,
-                    );
-                  });
-                },
-              ),
-            ),
-          ];
-
-          _mapController.move(markers[0].point, 8);
-        }
-
-        localidades.forEach(
-          (l) => markers.add(Marker(
-            point: LatLng(l.latitud, l.longitud),
-            builder: (ctx) => IconButton(
-              icon: Icon(Icons.emoji_emotions_rounded),
-              color: Colors.deepOrangeAccent,
-              iconSize: 30,
-              onPressed: () {
+    return MultiBlocListener(
+        listeners: [
+          BlocListener<BannerBusquedaBloc, BannerBusquedaState>(
+            listener: (context, state) {
+              if (state.status == BannerBusquedaStatus.porProvincia) {
                 setState(() {
+                  if (state.provincia != null) provincia = state.provincia;
+                  marcadores = <Marker>[
+                    Marker(
+                      point: LatLng(provincia.latitud, provincia.longitud),
+                      builder: (ctx) => IconButton(
+                        icon: Icon(Icons.location_on_rounded),
+                        color: Colors.red,
+                        iconSize: 30,
+                        onPressed: () {
+                          setState(() {
+                            _mapController.move(
+                              LatLng(provincia.latitud, provincia.longitud),
+                              14,
+                            );
+                          });
+                        },
+                      ),
+                    ),
+                  ];
                   _mapController.move(
-                    LatLng(l.latitud, l.longitud),
-                    14,
-                  );
+                      LatLng(provincia.latitud, provincia.longitud), 8);
                 });
-                context
-                    .read<LocalidadSeleccionadaBloc>()
-                    .add(ChangeLoc(data: l));
-              },
-            ),
-          )),
-        );
-
-        setState(() {
-          marcadores = markers;
-        });
-      }
-    }, child: BlocBuilder<FormBusquedaBloc, FormBusquedaState>(
-            builder: (context, state) {
-      return FlutterMap(
-        mapController: _mapController,
-        options: MapOptions(
-            center: LatLng(36.716667, -4.416667),
-            zoom: 6,
-            controller: _mapController),
-        layers: [
-          TileLayerOptions(
-              urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-              subdomains: ['a', 'b', 'c']),
-          MarkerLayerOptions(markers: marcadores),
+              } else if (state.status == BannerBusquedaStatus.porUbicacion) {
+                setState(() {
+                  if (state.ubicacion != null) _location = state.ubicacion;
+                  marcadores = <Marker>[
+                    Marker(
+                      point: LatLng(_location.latitude, _location.longitude),
+                      builder: (ctx) => IconButton(
+                        icon: Icon(Icons.accessibility),
+                        color: Colors.deepOrangeAccent,
+                        iconSize: 30,
+                        onPressed: () {
+                          setState(() {
+                            _mapController.move(
+                              LatLng(_location.latitude, _location.longitude),
+                              14,
+                            );
+                          });
+                        },
+                      ),
+                    ),
+                  ];
+                  _mapController.move(
+                      LatLng(_location.latitude, _location.longitude), 8);
+                });
+              }
+            },
+          ),
+          BlocListener<FormBusquedaBloc, FormBusquedaState>(
+              listener: (context, state) {
+            if (state.status == FormBusquedaStatus.empty) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.deepOrangeAccent,
+                content: Text('Oops! No hay resultados :(',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+              ));
+            } else if (state.status == FormBusquedaStatus.sucess) {
+              setState(() {
+                state.locs.forEach(
+                  (l) => marcadores.add(Marker(
+                    point: LatLng(l.latitud, l.longitud),
+                    builder: (ctx) => IconButton(
+                      icon: Icon(Icons.emoji_emotions_rounded),
+                      color: Colors.deepOrangeAccent,
+                      iconSize: 30,
+                      onPressed: () {
+                        setState(() {
+                          _mapController.move(
+                            LatLng(l.latitud, l.longitud),
+                            14,
+                          );
+                        });
+                        context
+                            .read<LocalidadSeleccionadaBloc>()
+                            .add(ChangeLoc(data: l));
+                      },
+                    ),
+                  )),
+                );
+              });
+            }
+          }),
         ],
-      );
-    }));
+        child: FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+              center: LatLng(36.716667, -4.416667),
+              zoom: 6,
+              controller: _mapController),
+          layers: [
+            TileLayerOptions(
+                urlTemplate:
+                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                subdomains: ['a', 'b', 'c']),
+            MarkerLayerOptions(markers: marcadores),
+          ],
+        ));
   }
 }
 

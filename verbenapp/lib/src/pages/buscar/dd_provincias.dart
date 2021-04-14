@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/DAL/models/provincia.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
-import 'blocs/FormBusqueda/form_busqueda_bloc.dart';
+import 'blocs/BannerBusqueda/banner_busqueda_bloc.dart';
 
 class DropDownProvincias extends StatelessWidget {
   final List<Provincia> provincias;
@@ -46,7 +46,9 @@ class DropDownProvincias extends StatelessWidget {
       items: provincias,
       itemAsString: (Provincia p) => p.nombre,
       onChanged: (value) {
-        context.read<FormBusquedaBloc>().add(CambiaProvincia(provincia: value));
+        context
+            .read<BannerBusquedaBloc>()
+            .add(CambiaProvincia(provincia: value));
       },
       dropDownButton: Text(''),
     );

@@ -59,7 +59,8 @@ class Verbena {
       this.nombre = '',
       this.provincia = '',
       this.localidad = '',
-      this.url = ''});
+      this.url = '',
+      this.url_trip = ''});
 
   String descripcion;
   String detailImg;
@@ -72,6 +73,7 @@ class Verbena {
   String id;
   String uniqueId;
   String url;
+  String url_trip;
 
   factory Verbena.fromJson(Map<dynamic, dynamic> json) => Verbena(
       hasta: json['hasta'],
@@ -79,7 +81,8 @@ class Verbena {
       desde: json["desde"],
       nombre: json["nombre"],
       url: json['url'],
-      img: json['img']);
+      img: json['img'],
+      url_trip: json['url_trip']);
   factory Verbena.fromJsonToProximas(Map<dynamic, dynamic> json) {
     var nextMonth = DateTime.now().add(Duration(days: 30));
     var fechaDesdeParse = DateFormat('dd/MM/yyyy').parse(json['desde']);
@@ -91,7 +94,8 @@ class Verbena {
           desde: json["desde"],
           nombre: json["nombre"],
           url: json['url'],
-          img: json['img']);
+          img: json['img'],
+          url_trip: json['url_trip']);
     return null;
   }
 
@@ -101,7 +105,8 @@ class Verbena {
         "desde": desde,
         "nombre": nombre,
         "url": url,
-        "img": img
+        "img": img,
+        "url_type": url_trip
       };
 
   getImg() {

@@ -48,8 +48,13 @@ class LocalidadBL {
   //   return results;
   // }
 
-  Future<bool> insertarLocalidad(Localidad loc) async =>
-      await _localidadRepository.insertarLocalidad(loc);
+  Future<bool> insertarLocalidad(Localidad loc) async {
+    await _localidadRepository.insertarLocalidad(loc);
+    await _coordenadaRepository.insertarCoordenada(Coordenada(
+        localidad: loc.nombre, latitud: loc.latitud, longitud: loc.longitud));
+
+    return true;
+  }
 
   // Future<List<Localidad>> localidadesParaSelect() async {
   //   var response =

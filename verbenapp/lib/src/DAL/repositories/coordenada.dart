@@ -15,4 +15,10 @@ class CoordenadaRepository {
     });
     return results;
   }
+
+  Future<bool> insertarCoordenada(Coordenada coord) async {
+    var results = await _coordRepository.add(coord.toJson());
+
+    return results != null;
+  }
 }

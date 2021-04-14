@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:verbenapp/src/DAL/models/verbena.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class DetallePage extends StatelessWidget {
   @override
@@ -15,6 +17,7 @@ class DetallePage extends StatelessWidget {
           SizedBox(
             height: 10.0,
           ),
+
           Center(
             child: Text(
               verbena.nombre,
@@ -29,6 +32,7 @@ class DetallePage extends StatelessWidget {
             height: 10.0,
           ),
           _detalles(verbena, context),
+          Botones(verbena: verbena),
           _descripcion(verbena),
           _comoLlegar(context, verbena.url),
           // _mapa(verbena, context)
@@ -40,6 +44,28 @@ class DetallePage extends StatelessWidget {
   Widget _crearAppBar(Verbena verbena, BuildContext context) {
     return SliverAppBar(
       elevation: 2.0,
+      actions: [
+        IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: WebView(
+                        javascriptMode: JavascriptMode.unrestricted,
+                        initialUrl:
+                            'https://www.tripadvisor.com/Tourism-g265784-Ronda_Costa_del_Sol_Province_of_Malaga_Andalucia-Vacations.html',
+                      ),
+                    ),
+                  );
+                });
+          },
+        )
+      ],
       backgroundColor: Colors.deepOrangeAccent,
       expandedHeight: MediaQuery.of(context).size.height * 0.4,
       floating: false,
@@ -105,7 +131,7 @@ class DetallePage extends StatelessWidget {
 
   Widget _descripcion(Verbena verbena) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+      margin: EdgeInsets.symmetric(horizontal: 10.0),
       child: Text(
         verbena.descripcion,
         textAlign: TextAlign.justify,
@@ -139,7 +165,167 @@ class DetallePage extends StatelessWidget {
             )
           ],
         ),
-        onPressed: () => launch(url),
+        onPressed: () => launch(
+            'https://www.tripadvisor.com/Tourism-g265784-Ronda_Costa_del_Sol_Province_of_Malaga_Andalucia-Vacations.html'),
+      ),
+    );
+  }
+}
+
+class Botones extends StatelessWidget {
+  final verbena;
+  Botones({this.verbena});
+  @override
+  Widget build(BuildContext context) {
+    final _sc = MediaQuery.of(context).size;
+    return Container(
+      height: _sc.height * 0.1,
+      width: _sc.width,
+      margin: EdgeInsets.all(20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          BotonComentarios(
+              img: 'comments.png',
+              navigationUrl:
+                  'https://www.youtube.com/watch?v=I3bhRb6f5dA&ab_channel=RajaYogan'),
+          BotonTripAdvisor(
+              img: 'tripadvisor-icon.png', navigationUrl: verbena.url_trip),
+          BotonDescarga(verbena: verbena),
+          BotonMaps(navigationUrl: 'https://goo.gl/maps/pJbCeCS2P8DNjNV76'),
+        ],
+      ),
+    );
+  }
+}
+
+class Boton extends StatelessWidget {
+  final img;
+  final navigationUrl;
+  Boton({this.img, this.navigationUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: Colors.orange,
+        child: InkWell(
+            onTap: () => launch(navigationUrl), // needed
+            child: Container(
+              color: Colors.red,
+              padding: EdgeInsets.all(10),
+              child: Image.asset(
+                'assets/img/' + img,
+                fit: BoxFit.cover,
+              ),
+            )));
+  }
+}
+
+class BotonComentarios extends StatelessWidget {
+  final img;
+  final navigationUrl;
+  BotonComentarios({this.img, this.navigationUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: InkWell(
+            onTap: () => launch(navigationUrl), // needed
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Colors.deepOrangeAccent,
+              ),
+              padding: EdgeInsets.all(15),
+              child: Image.asset(
+                'assets/img/comments.png',
+                fit: BoxFit.cover,
+              ),
+            )));
+  }
+}
+
+class BotonTripAdvisor extends StatelessWidget {
+  final img;
+  final navigationUrl;
+  BotonTripAdvisor({this.img, this.navigationUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: InkWell(
+            onTap: () => launch(navigationUrl), // needed
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                color: Colors.deepOrangeAccent,
+              ),
+              child: Image.asset(
+                'assets/img/tripadvisor-icon.png',
+                fit: BoxFit.cover,
+              ),
+            )));
+  }
+}
+
+class BotonDescarga extends StatelessWidget {
+  final verbena;
+  BotonDescarga({this.verbena});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: InkWell(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            color: Colors.deepOrangeAccent,
+          ),
+          padding: EdgeInsets.all(10),
+          child: Image.asset(
+            'assets/img/happy-file.png',
+            fit: BoxFit.cover,
+          ),
+        ),
+        onTap: () async {
+          WidgetsFlutterBinding.ensureInitialized();
+          await FlutterDownloader.initialize(debug: true);
+          final taskId = await FlutterDownloader.enqueue(
+            url: verbena.img,
+            savedDir: '/' + verbena.img,
+            fileName: 'Agenda de ' + verbena.nombre,
+            showNotification:
+                true, // show download progress in status bar (for Android)
+            openFileFromNotification:
+                true, // click on notification to open downloaded file (for Android)
+          );
+          print(taskId);
+        }, // needed
+      ),
+    );
+  }
+}
+
+class BotonMaps extends StatelessWidget {
+  final navigationUrl;
+  BotonMaps({this.navigationUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 70,
+      width: 70,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100),
+        color: Colors.deepOrangeAccent,
+      ),
+      child: InkWell(
+        onTap: () => launch(navigationUrl), // needed
+        child: Icon(
+          Icons.location_on_rounded,
+          color: Colors.white,
+          size: 50,
+        ),
       ),
     );
   }

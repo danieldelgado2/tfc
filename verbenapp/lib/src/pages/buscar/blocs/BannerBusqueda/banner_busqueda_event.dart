@@ -1,0 +1,37 @@
+part of 'banner_busqueda_bloc.dart';
+
+abstract class BannerBusquedaEvent extends Equatable {
+  const BannerBusquedaEvent();
+
+  @override
+  List<Object> get props => [];
+}
+
+class PorProvincia extends BannerBusquedaEvent {
+  PorProvincia({this.provincia});
+  final provincia;
+  @override
+  List<Object> get props => [provincia];
+}
+
+class PorUbicacion extends BannerBusquedaEvent {
+  PorUbicacion({this.ubicacion});
+  final ubicacion;
+  @override
+  List<Object> get props => [ubicacion];
+}
+
+class CambiaCheck extends BannerBusquedaEvent {
+  const CambiaCheck({this.value});
+  final value;
+
+  @override
+  List<Object> get props => [value];
+}
+
+class CambiaProvincia extends BannerBusquedaEvent {
+  const CambiaProvincia({this.provincia});
+  final provincia;
+  @override
+  List<Object> get props => [provincia];
+}

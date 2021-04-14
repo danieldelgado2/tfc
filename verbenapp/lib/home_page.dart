@@ -68,6 +68,11 @@ class HomePage extends StatelessWidget {
         ),
         onPressed: () {
           Navigator.pushNamed(context, ruta);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: Colors.deepOrangeAccent,
+            content: Text('Activa tu ubicación o elige una provincia',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          ));
         },
       ),
     );

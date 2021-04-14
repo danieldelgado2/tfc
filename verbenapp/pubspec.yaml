@@ -37,6 +37,8 @@ dependencies:
   flutter_bloc: ^7.0.0
   equatable: ^2.0.0
   formz: ^0.3.2
+  webview_flutter: ^2.0.4
+  flutter_downloader: ^1.6.0
 
 
 dev_dependencies:
