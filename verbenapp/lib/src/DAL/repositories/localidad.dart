@@ -45,17 +45,20 @@ class LocalidadRepository {
     final localidadesDelMes = Localidades.fromDocumentsListToProximas(
             (await _localidadesRepository.getDocuments()).documents)
         .localidades;
-    _localidadesProximasRepository
-        .setData({"lista": Localidades.toJson(localidadesDelMes)});
+    _localidadesProximasRepository.setData(
+        {"lista": Localidades.toJson(localidadesDelMes).localidadesJson});
     return localidadesDelMes;
   }
 
   Future<bool> insertarLocalidad(Localidad loc) async {
+    var result;
     if (loc.id != "") {
-      await _localidadesRepository.document(loc.id).setData(loc.toJson());
+      result = _localidadesRepository.document(loc.id).setData(loc.toJson());
       return true;
+    } else {
+      result = await _localidadesRepository.add(loc.toJson());
     }
-
-    return (await _localidadesRepository.add(loc.toJson()) != null);
+    crearDelMes();
+    return (result != null);
   }
 }

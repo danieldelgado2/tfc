@@ -28,6 +28,7 @@ class DropDownLoc extends StatelessWidget {
             backgroundColor: Colors.deepOrangeAccent,
           );
         }
+
         return DropdownSearch<Localidad>(
           mode: Mode.BOTTOM_SHEET,
           dropdownSearchDecoration: InputDecoration(

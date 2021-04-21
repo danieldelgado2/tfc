@@ -47,6 +47,8 @@ class Coordenada {
 
   Map<String, dynamic> toJson() => {
         "localidad": localidad,
+        "latitud": latitud,
+        "longitud": longitud,
       };
 }
 

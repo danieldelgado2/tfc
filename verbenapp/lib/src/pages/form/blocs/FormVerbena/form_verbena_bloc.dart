@@ -44,6 +44,9 @@ class FormVerbenaBloc extends Bloc<FormVerbenaEvent, FormVerbenaState> {
     } else if (event is UrlV) {
       state.verbena.url = event.data;
       yield state;
+    } else if (event is UrlTrip) {
+      state.verbena.urlTrip = event.data;
+      yield state;
     } else if (event is ImgV) {
       state.verbena.img = event.data;
       yield state;

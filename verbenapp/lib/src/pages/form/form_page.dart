@@ -38,6 +38,14 @@ class _FormPage extends StatelessWidget {
                             .add(GuardarLocalidad());
                       },
                     ),
+                    ElevatedButton(
+                      child: Text('Nueva Localidad'),
+                      onPressed: () {
+                        context
+                            .read<FormLocalidadBloc>()
+                            .add(ChangeDD(Localidad(verbenas: <Verbena>[])));
+                      },
+                    ),
                     FormLocalidad(),
                     Padding(padding: EdgeInsets.only(top: 30)),
                     FormVerbena(),

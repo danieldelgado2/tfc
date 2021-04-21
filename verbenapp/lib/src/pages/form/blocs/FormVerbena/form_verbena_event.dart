@@ -86,6 +86,17 @@ class UrlV extends FormVerbenaEvent {
   @override
   List<Object> get props => [data];
 }
+///
+/// Evento para modificar la url
+///
+class UrlTrip extends FormVerbenaEvent {
+  const UrlTrip({this.data});
+
+  final data;
+
+  @override
+  List<Object> get props => [data];
+}
 
 ///
 /// Evento para coger los datos de la verbena

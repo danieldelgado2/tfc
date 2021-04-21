@@ -118,6 +118,20 @@ class FormVerbena extends StatelessWidget {
                 context.read<FormVerbenaBloc>().add(UrlV(data: value));
               },
             ),
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Url Trip Advisor',
+                labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                ),
+              ),
+              controller: TextEditingController(text: state.verbena.urlTrip),
+              style: TextStyle(fontSize: 22),
+              onChanged: (value) {
+                context.read<FormVerbenaBloc>().add(UrlTrip(data: value));
+              },
+            ),
             Center(
               child: ElevatedButton(
                 child: Text(

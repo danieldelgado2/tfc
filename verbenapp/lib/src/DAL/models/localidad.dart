@@ -33,9 +33,10 @@ class Localidades {
 
     for (var item in documents) {
       final localidad = new Localidad.fromJsonToProximas(item.data);
-
-      localidad.id = item.reference.documentID;
-      localidades.add(localidad);
+      if (localidad != null) {
+        localidad.id = item.reference.documentID;
+        localidades.add(localidad);
+      }
     }
   }
 
@@ -81,19 +82,25 @@ class Localidad {
       verbenas: List<Verbena>.from(Verbenas.fromJsonList(
               json["verbenas"], json["nombre"], json['provincia'])
           .verbenas));
-  factory Localidad.fromJsonToProximas(Map<String, dynamic> json) => Localidad(
-      nombre: json["nombre"],
-      provincia: json['provincia'],
-      latitud: json['latitud'],
-      longitud: json['longitud'],
-      verbenas: List<Verbena>.from(Verbenas.fromJsonListToProximas(
-              json["verbenas"], json["nombre"], json['provincia'])
-          .verbenas));
+  factory Localidad.fromJsonToProximas(Map<String, dynamic> json) {
+    final verbenas = List<Verbena>.from(Verbenas.fromJsonListToProximas(
+            json["verbenas"], json["nombre"], json['provincia'])
+        .verbenas);
+
+    if (verbenas.isEmpty) return null;
+
+    return Localidad(
+        nombre: json["nombre"],
+        provincia: json['provincia'],
+        latitud: json['latitud'],
+        longitud: json['longitud'],
+        verbenas: verbenas);
+  }
 
   Map<String, dynamic> toJson() => {
         "nombre": nombre,
-        "longitud": latitud,
-        "latitud": longitud,
+        "latitud": latitud,
+        "longitud": longitud,
         "provincia": provincia,
         "verbenas": List<dynamic>.from(verbenas.map((x) => x.toJson()))
       };

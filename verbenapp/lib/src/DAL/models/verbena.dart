@@ -60,7 +60,8 @@ class Verbena {
       this.provincia = '',
       this.localidad = '',
       this.url = '',
-      this.url_trip = ''});
+      this.urlTrip = '',
+      this.urlDoc = ''});
 
   String descripcion;
   String detailImg;
@@ -73,7 +74,8 @@ class Verbena {
   String id;
   String uniqueId;
   String url;
-  String url_trip;
+  String urlTrip;
+  String urlDoc;
 
   factory Verbena.fromJson(Map<dynamic, dynamic> json) => Verbena(
       hasta: json['hasta'],
@@ -82,12 +84,17 @@ class Verbena {
       nombre: json["nombre"],
       url: json['url'],
       img: json['img'],
-      url_trip: json['url_trip']);
+      urlTrip: json['url_trip'],
+      urlDoc: json['url_doc']);
   factory Verbena.fromJsonToProximas(Map<dynamic, dynamic> json) {
     var nextMonth = DateTime.now().add(Duration(days: 30));
     var fechaDesdeParse = DateFormat('dd/MM/yyyy').parse(json['desde']);
-    var isBefore = fechaDesdeParse.isBefore(nextMonth);
-    if (isBefore)
+    var fechaHastaParse = DateFormat('dd/MM/yyyy').parse(json['hasta']);
+    var isInRange = !(fechaDesdeParse.isBefore(DateTime.now()) &&
+            fechaHastaParse.isBefore(DateTime.now())) &&
+        !(fechaDesdeParse.isAfter(nextMonth) &&
+            fechaHastaParse.isAfter(nextMonth));
+    if (isInRange)
       return Verbena(
           hasta: json['hasta'],
           descripcion: json["descripcion"],
@@ -95,7 +102,8 @@ class Verbena {
           nombre: json["nombre"],
           url: json['url'],
           img: json['img'],
-          url_trip: json['url_trip']);
+          urlTrip: json['url_trip'],
+          urlDoc: json['url_doc']);
     return null;
   }
 
@@ -106,7 +114,8 @@ class Verbena {
         "nombre": nombre,
         "url": url,
         "img": img,
-        "url_type": url_trip
+        "url_trip": urlTrip,
+        "url_doc": "http://www.africau.edu/images/default/sample.pdf"
       };
 
   getImg() {

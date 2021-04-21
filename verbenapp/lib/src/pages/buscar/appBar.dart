@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_map/flutter_map.dart';
@@ -75,9 +73,7 @@ class _BannerBusquedaState extends State<BannerBusqueda> {
                   if (state.provincia != null) provincia = state.provincia;
                   onPressed = () => context.read<FormBusquedaBloc>().add(
                       FormBusquedaEvent(
-                          ubi: ubicacion,
-                          prov: provincia,
-                          byDelMes: celebrandose));
+                          ubi: null, prov: provincia, byDelMes: celebrandose));
                 });
               } else {
                 setState(() {
@@ -283,28 +279,31 @@ class _MapaState extends State<Mapa> {
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               ));
             } else if (state.status == FormBusquedaStatus.sucess) {
+              final results = marcadores;
+
+              state.locs.forEach(
+                (l) => results.add(Marker(
+                  point: LatLng(l.latitud, l.longitud),
+                  builder: (ctx) => IconButton(
+                    icon: Icon(Icons.emoji_emotions_rounded),
+                    color: Colors.deepOrangeAccent,
+                    iconSize: 30,
+                    onPressed: () {
+                      setState(() {
+                        _mapController.move(
+                          LatLng(l.latitud, l.longitud),
+                          14,
+                        );
+                      });
+                      context
+                          .read<LocalidadSeleccionadaBloc>()
+                          .add(ChangeLoc(data: l));
+                    },
+                  ),
+                )),
+              );
               setState(() {
-                state.locs.forEach(
-                  (l) => marcadores.add(Marker(
-                    point: LatLng(l.latitud, l.longitud),
-                    builder: (ctx) => IconButton(
-                      icon: Icon(Icons.emoji_emotions_rounded),
-                      color: Colors.deepOrangeAccent,
-                      iconSize: 30,
-                      onPressed: () {
-                        setState(() {
-                          _mapController.move(
-                            LatLng(l.latitud, l.longitud),
-                            14,
-                          );
-                        });
-                        context
-                            .read<LocalidadSeleccionadaBloc>()
-                            .add(ChangeLoc(data: l));
-                      },
-                    ),
-                  )),
-                );
+                marcadores = results;
               });
             }
           }),

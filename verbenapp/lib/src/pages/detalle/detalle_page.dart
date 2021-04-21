@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:verbenapp/src/DAL/models/verbena.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:verbenapp/src/pages/detalle/star_rating.dart';
 
 class DetallePage extends StatelessWidget {
   @override
@@ -34,7 +33,6 @@ class DetallePage extends StatelessWidget {
           _detalles(verbena, context),
           Botones(verbena: verbena),
           _descripcion(verbena),
-          _comoLlegar(context, verbena.url),
           // _mapa(verbena, context)
         ])),
       ]),
@@ -44,28 +42,6 @@ class DetallePage extends StatelessWidget {
   Widget _crearAppBar(Verbena verbena, BuildContext context) {
     return SliverAppBar(
       elevation: 2.0,
-      actions: [
-        IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      child: WebView(
-                        javascriptMode: JavascriptMode.unrestricted,
-                        initialUrl:
-                            'https://www.tripadvisor.com/Tourism-g265784-Ronda_Costa_del_Sol_Province_of_Malaga_Andalucia-Vacations.html',
-                      ),
-                    ),
-                  );
-                });
-          },
-        )
-      ],
       backgroundColor: Colors.deepOrangeAccent,
       expandedHeight: MediaQuery.of(context).size.height * 0.4,
       floating: false,
@@ -139,37 +115,6 @@ class DetallePage extends StatelessWidget {
       ),
     );
   }
-
-  Widget _comoLlegar(context, url) {
-    final sc = MediaQuery.of(context).size;
-    return Container(
-      width: sc.width * 0.4,
-      height: sc.height * 0.08,
-      child: ElevatedButton(
-        style: ButtonStyle(
-            backgroundColor:
-                MaterialStateProperty.all(Colors.deepOrangeAccent)),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '!Voy para alla!',
-              style: TextStyle(fontSize: 20),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
-            ),
-            Icon(
-              Icons.directions_run,
-              size: 30,
-            )
-          ],
-        ),
-        onPressed: () => launch(
-            'https://www.tripadvisor.com/Tourism-g265784-Ronda_Costa_del_Sol_Province_of_Malaga_Andalucia-Vacations.html'),
-      ),
-    );
-  }
 }
 
 class Botones extends StatelessWidget {
@@ -185,52 +130,23 @@ class Botones extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          BotonComentarios(
-              img: 'comments.png',
-              navigationUrl:
-                  'https://www.youtube.com/watch?v=I3bhRb6f5dA&ab_channel=RajaYogan'),
-          BotonTripAdvisor(
-              img: 'tripadvisor-icon.png', navigationUrl: verbena.url_trip),
-          BotonDescarga(verbena: verbena),
-          BotonMaps(navigationUrl: 'https://goo.gl/maps/pJbCeCS2P8DNjNV76'),
+          BotonTripAdvisor(navigationUrl: verbena.urlTrip),
+          BotonDescarga(navigationUrl: verbena.urlDoc),
+          BotonMaps(navigationUrl: verbena.url),
         ],
       ),
     );
   }
 }
 
-class Boton extends StatelessWidget {
-  final img;
-  final navigationUrl;
-  Boton({this.img, this.navigationUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        color: Colors.orange,
-        child: InkWell(
-            onTap: () => launch(navigationUrl), // needed
-            child: Container(
-              color: Colors.red,
-              padding: EdgeInsets.all(10),
-              child: Image.asset(
-                'assets/img/' + img,
-                fit: BoxFit.cover,
-              ),
-            )));
-  }
-}
-
 class BotonComentarios extends StatelessWidget {
-  final img;
-  final navigationUrl;
-  BotonComentarios({this.img, this.navigationUrl});
+  BotonComentarios();
 
   @override
   Widget build(BuildContext context) {
     return Container(
         child: InkWell(
-            onTap: () => launch(navigationUrl), // needed
+            onTap: () => Scaffold.of(context).openDrawer(), // needed
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(50),
@@ -246,9 +162,8 @@ class BotonComentarios extends StatelessWidget {
 }
 
 class BotonTripAdvisor extends StatelessWidget {
-  final img;
   final navigationUrl;
-  BotonTripAdvisor({this.img, this.navigationUrl});
+  BotonTripAdvisor({this.navigationUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -269,8 +184,8 @@ class BotonTripAdvisor extends StatelessWidget {
 }
 
 class BotonDescarga extends StatelessWidget {
-  final verbena;
-  BotonDescarga({this.verbena});
+  final navigationUrl;
+  BotonDescarga({this.navigationUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -288,18 +203,8 @@ class BotonDescarga extends StatelessWidget {
           ),
         ),
         onTap: () async {
-          WidgetsFlutterBinding.ensureInitialized();
-          await FlutterDownloader.initialize(debug: true);
-          final taskId = await FlutterDownloader.enqueue(
-            url: verbena.img,
-            savedDir: '/' + verbena.img,
-            fileName: 'Agenda de ' + verbena.nombre,
-            showNotification:
-                true, // show download progress in status bar (for Android)
-            openFileFromNotification:
-                true, // click on notification to open downloaded file (for Android)
-          );
-          print(taskId);
+          launch(navigationUrl);
+          // Use location.
         }, // needed
       ),
     );
@@ -325,6 +230,144 @@ class BotonMaps extends StatelessWidget {
           Icons.location_on_rounded,
           color: Colors.white,
           size: 50,
+        ),
+      ),
+    );
+  }
+}
+
+class Comentarios extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _sc = MediaQuery.of(context).size;
+    return Container(
+      height: _sc.height,
+      width: _sc.width,
+      color: Colors.greenAccent,
+      child: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.deepOrangeAccent,
+              ),
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Text(
+                        'Valoraciones',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Comentario(),
+            FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AgregarComentario());
+                })
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Comentario extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _sc = MediaQuery.of(context).size;
+    return Card(
+      color: Colors.amber,
+      margin: EdgeInsets.all(10),
+      child: Container(
+        padding: EdgeInsets.all(10),
+        height: _sc.height * 0.3,
+        width: _sc.width,
+        child: Column(
+          children: [
+            Text(
+                'Holaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaola')
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AgregarComentario extends StatefulWidget {
+  @override
+  _AgregarComentarioState createState() => _AgregarComentarioState();
+}
+
+class _AgregarComentarioState extends State<AgregarComentario> {
+  TextEditingController controller;
+  FocusNode focus;
+  @override
+  void initState() {
+    controller = TextEditingController();
+    focus = FocusNode();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final _sc = MediaQuery.of(context).size;
+    return AlertDialog(
+      insetPadding: EdgeInsets.all(10),
+      contentPadding: EdgeInsets.all(0),
+      content: Container(
+        height: _sc.height * 0.45,
+        width: _sc.width,
+        padding: EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Añade una valoración',
+                style: TextStyle(
+                  fontSize: 24,
+                )),
+            StarRating(
+              rating: 3,
+              onRatingChanged: null,
+            ),
+            GestureDetector(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.all(10),
+                height: _sc.height * 0.2,
+                width: _sc.width,
+                decoration: BoxDecoration(
+                    border:
+                        Border.all(color: Colors.deepOrangeAccent, width: 2)),
+                child: ListView(
+                  children: [
+                    TextField(
+                      controller: controller,
+                      maxLines: null,
+                      decoration: null,
+                      focusNode: focus,
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () {
+                focus.requestFocus();
+              },
+            ),
+            ElevatedButton(child: Text('Valorar'), onPressed: () {})
+          ],
         ),
       ),
     );

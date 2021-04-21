@@ -17,7 +17,17 @@ class CoordenadaRepository {
   }
 
   Future<bool> insertarCoordenada(Coordenada coord) async {
-    var results = await _coordRepository.add(coord.toJson());
+    var resuults = await _coordRepository
+        .where('localidad', isEqualTo: coord.localidad)
+        .getDocuments();
+    var results;
+    if (resuults.documents.isEmpty) {
+      results = await _coordRepository.add(coord.toJson());
+    } else {
+      results = _coordRepository
+          .document(resuults.documents[0].documentID)
+          .setData(coord.toJson());
+    }
 
     return results != null;
   }
