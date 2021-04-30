@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/pages/form/bloc.dart';
 
+///
+/// Vista principal del formulario
+/// del panel de administración para
+/// crear o editar localidades/verbenas
+///
+///
 class FormVerbena extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

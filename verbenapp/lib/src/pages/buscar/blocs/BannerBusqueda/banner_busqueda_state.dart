@@ -2,6 +2,16 @@ part of 'banner_busqueda_bloc.dart';
 
 enum BannerBusquedaStatus { porProvincia, porUbicacion, invalid }
 
+///
+/// Clase de tipo State, a la que
+/// reaccionará la UI gracias a los
+/// BlocBuilders o BlocListeners.
+///
+/// Disponer de varios constructores
+/// dependiendo de las propiedades del
+/// estado concreto al que va a pasar
+///
+///
 class BannerBusquedaState extends Equatable {
   const BannerBusquedaState._(
       {this.provincia, this.status, this.ubicacion, this.byDelMes});

@@ -7,6 +7,9 @@ import 'package:verbenapp/src/pages/form/form_localidad.dart';
 
 import 'form_verbena.dart';
 
+///
+/// Vista principal del formulario
+///
 class FormPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

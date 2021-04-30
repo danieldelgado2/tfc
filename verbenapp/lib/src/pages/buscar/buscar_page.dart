@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:verbenapp/src/pages/buscar/verbena_horizontal.dart';
 import 'appBar.dart';
 
+///
+/// Vista de Búsqueda
+///
 class BuscarPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

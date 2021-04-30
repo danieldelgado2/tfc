@@ -4,6 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:verbenapp/src/DAL/models/models.dart';
 
+///
+/// Realiza operaciones de parseo para una
+/// lista de Localidad
+///
 class Localidades {
   List<Localidad> localidades = [];
   List<Map<String, dynamic>> localidadesJson = [];
@@ -53,10 +57,12 @@ class Localidades {
     });
   }
 }
-// To parse this JSON data, do
-//
-//     final verbena = verbenaFromJson(jsonString);
 
+///
+/// Modelo de la coleccion en BD con el mismo nombre.
+/// Contiene una lista de Verbena que mostrará
+/// en el mapa
+///
 class Localidad {
   Localidad(
       {this.id = '',

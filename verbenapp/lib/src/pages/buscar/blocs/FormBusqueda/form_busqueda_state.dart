@@ -2,6 +2,16 @@ part of 'form_busqueda_bloc.dart';
 
 enum FormBusquedaStatus { empty, sucess, initial, error }
 
+///
+/// Clase de tipo State, a la que
+/// reaccionará la UI gracias a los
+/// BlocBuilders o BlocListeners.
+///
+/// Disponer de varios constructores
+/// dependiendo de las propiedades del
+/// estado concreto al que va a pasar
+///
+///
 class FormBusquedaState {
   const FormBusquedaState._({
     this.status = FormBusquedaStatus.initial,

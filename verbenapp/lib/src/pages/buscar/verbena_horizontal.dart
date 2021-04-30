@@ -4,6 +4,11 @@ import 'package:verbenapp/src/DAL/models/verbena.dart';
 
 import 'blocs/LocalidadSeleccionada/localidad_seleccionada_bloc.dart';
 
+///
+/// Container que tendrá la Localidad
+/// seleccionada por el usuario con sus
+/// diferentes fiestas
+///
 class ContainerVerbenas extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -45,6 +50,11 @@ class ContainerVerbenas extends StatelessWidget {
   }
 }
 
+///
+/// Vista scrollabe de las distintas
+/// fiestas de la localidad seleccionada por
+/// el usuario
+///
 class EventoHorizontal extends StatelessWidget {
   final List<Verbena> verbenas;
   final double altura;

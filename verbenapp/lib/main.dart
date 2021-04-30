@@ -1,20 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/BL/bl.dart';
-import 'package:verbenapp/src/pages/buscar/bloc.dart';
+import 'package:verbenapp/src/pages/buscar/buscar.dart';
 import 'package:verbenapp/src/pages/buscar/buscar_page.dart';
 import 'package:verbenapp/src/pages/detalle/detalle_page.dart';
 import 'package:verbenapp/src/pages/form/bloc.dart';
 import 'package:verbenapp/src/pages/form/form_page.dart';
-import 'package:dcdg/dcdg.dart';
+import 'package:flutter/services.dart';
 
-import 'home_page.dart';
+import 'src/home_page.dart';
 
 void main() {
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
+///
+/// Clase principal de la que arranca la aplicación.
+/// Contiene todos los bloc que se usan a lo largo de
+/// la app además de los BL para que los bloc tengan acceso.
+///
 class MyApp extends StatelessWidget {
   final _mapaBL = MapaBL();
   final _provinciaBL = ProvinciaBL();

@@ -7,11 +7,21 @@ import '../../buscar.dart';
 part 'form_busqueda_event.dart';
 part 'form_busqueda_state.dart';
 
+///
+/// Bloc encargado de manejar los estados
+/// del Mapa y sus marcadores en función
+/// de los resultados de BD
+///
 class FormBusquedaBloc extends Bloc<FormBusquedaEvent, FormBusquedaState> {
   FormBusquedaBloc(this.localidadBL) : super(FormBusquedaState.initial());
 
   final LocalidadBL localidadBL;
 
+  ///
+  /// Dado un evento ocurrido en la UI,
+  /// el State cambiará con unas nuevas
+  /// propiedades
+  ///
   @override
   Stream<FormBusquedaState> mapEventToState(
     FormBusquedaEvent event,

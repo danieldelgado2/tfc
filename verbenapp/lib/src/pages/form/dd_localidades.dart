@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/pages/form/bloc.dart';
 import 'package:verbenapp/src/BL/bl.dart';
 
+///
+/// DropDown de localidades
+///
 class DDLocalidades extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

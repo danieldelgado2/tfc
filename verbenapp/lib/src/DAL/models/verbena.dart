@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 
+///
+/// Realiza operaciones de parseo para una
+/// lista de Verbena
+///
 class Verbenas {
   List<Verbena> verbenas = [];
   List<Map<String, dynamic>> verbenasToJson = [];
@@ -43,10 +47,12 @@ class Verbenas {
     verbenas.forEach((v) => verbenasToJson.add(v.toJson()));
   }
 }
-// To parse this JSON data, do
-//
-//     final verbena = verbenaFromJson(jsonString);
 
+///
+/// Modelo utilizado principalmente en
+/// la vista de Detalle para mostrar
+/// toda la información disponible al usuario
+///
 class Verbena {
   Verbena(
       {this.id = '',

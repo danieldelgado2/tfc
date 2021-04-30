@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+///
+/// Vista por defecto de la aplicación.
+/// Muestra dos botones, uno para la búsqueda
+/// y otro para acceder al panel de administración
+///
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -39,7 +44,7 @@ class HomePage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _boton('Admin', 'form', context),
+          // _boton('Admin', 'form', context),
           _boton('Buscar', 'buscar', context),
         ],
       ),
@@ -68,11 +73,6 @@ class HomePage extends StatelessWidget {
         ),
         onPressed: () {
           Navigator.pushNamed(context, ruta);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            backgroundColor: Colors.deepOrangeAccent,
-            content: Text('Activa tu ubicación o elige una provincia',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-          ));
         },
       ),
     );

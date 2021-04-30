@@ -1,5 +1,9 @@
 import 'package:verbenapp/src/BL/bl.dart';
 
+///
+/// Usada por los Blocs para hacer operaciones relacionadas
+/// con el CRUD
+///
 class MapaBL {
   final _mapaRepository = MapaRepository();
 

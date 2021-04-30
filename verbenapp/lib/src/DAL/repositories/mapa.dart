@@ -1,5 +1,8 @@
 import 'package:verbenapp/src/DAL/repositories/repositories.dart';
 
+///
+/// Encargado de realizar operaciones CRUD en BD
+///
 class MapaRepository {
   final Location myLocation = Location();
   bool _serviceEnabled = false;

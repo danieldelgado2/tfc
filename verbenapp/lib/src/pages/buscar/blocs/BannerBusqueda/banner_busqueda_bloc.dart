@@ -3,11 +3,16 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../bloc.dart';
+import '../../buscar.dart';
 
 part 'banner_busqueda_event.dart';
 part 'banner_busqueda_state.dart';
 
+///
+/// Bloc encargado de manejar los
+/// diferentes criterios del formulario
+/// de la vista de Búsqueda
+///
 class BannerBusquedaBloc
     extends Bloc<BannerBusquedaEvent, BannerBusquedaState> {
   BannerBusquedaBloc({this.mapaBL})
@@ -16,6 +21,12 @@ class BannerBusquedaBloc
   final MapaBL mapaBL;
 
   LocationData _location;
+
+  ///
+  /// Dado un evento ocurrido en la UI,
+  /// el State cambiará con unas nuevas
+  /// propiedades
+  ///
   @override
   Stream<BannerBusquedaState> mapEventToState(
     BannerBusquedaEvent event,

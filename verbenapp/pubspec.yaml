@@ -37,11 +37,20 @@ dependencies:
   flutter_bloc: ^7.0.0
   equatable: ^2.0.0
   dcdg: ^3.0.0
+  
+  
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/img/happy-file.png"
+  adaptive_icon_background: "assets/img/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

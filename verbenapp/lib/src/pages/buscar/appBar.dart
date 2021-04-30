@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/src/pages/buscar/bloc.dart';
 
+import 'buscar.dart';
 import 'dd_provincias.dart';
 
+///
+/// AppBar desplegable que contendrá
+/// el mapa y el formulario de busqueda
+///
 class AppBarMapa extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -24,6 +28,10 @@ class AppBarMapa extends StatelessWidget {
   }
 }
 
+///
+/// Contiene al formulario de busqueda y
+/// permite mostrarse y ocultarse
+///
 class BannerDinamico extends StatelessWidget {
   final screenSize;
 
@@ -44,6 +52,10 @@ class BannerDinamico extends StatelessWidget {
   }
 }
 
+///
+/// Formulario para realizar búsquedas con
+/// filtros
+///
 class BannerBusqueda extends StatefulWidget {
   @override
   _BannerBusquedaState createState() => _BannerBusquedaState();
@@ -164,7 +176,7 @@ class _BannerBusquedaState extends State<BannerBusqueda> {
               FloatingActionButton(
                   heroTag: 'button-save',
                   child: Icon(
-                    Icons.check,
+                    Icons.search,
                     size: 30,
                   ),
                   backgroundColor: Colors.deepOrangeAccent,
@@ -196,6 +208,10 @@ class _BannerBusquedaState extends State<BannerBusqueda> {
   }
 }
 
+///
+/// Mapa que muestra los resultados de
+/// la busqueda del usuario
+///
 class Mapa extends StatefulWidget {
   final sc;
 
@@ -325,6 +341,9 @@ class _MapaState extends State<Mapa> {
   }
 }
 
+///
+/// Boton que muestra/oculta el formulario
+///
 class BotonBusqueda extends StatelessWidget {
   final sc;
   BotonBusqueda({this.sc});
@@ -334,11 +353,11 @@ class BotonBusqueda extends StatelessWidget {
       builder: (context, state) {
         return Positioned(
           top: sc.height * 0.108,
-          right: 10,
+          right: sc.width * 0.02,
           child: FloatingActionButton(
             heroTag: 'button-search',
             child: Icon(
-              Icons.search,
+              Icons.filter_alt_rounded,
               size: 30,
             ),
             backgroundColor: Colors.deepOrangeAccent,
@@ -351,6 +370,10 @@ class BotonBusqueda extends StatelessWidget {
   }
 }
 
+///
+/// DropDown de Pronvincia para el formulario
+/// de búsqueda
+///
 class SelectProvincias extends StatelessWidget {
   SelectProvincias({this.enabled});
 

@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'package:verbenapp/src/DAL/models/localidad.dart';
 
+///
+/// Realiza operaciones de parseo para una
+/// lista de Provincia
+///
 class Provincias {
   List<Provincia> provincias = [];
 
@@ -22,10 +26,12 @@ class Provincias {
     });
   }
 }
-// To parse this JSON data, do
-//
-//     final verbena = verbenaFromJson(jsonString);
 
+///
+/// Modelo de la coleccion en BD con el mismo nombre.
+/// Contiene una lista de Localidad que mostrará en
+/// el mapa.
+///
 class Provincia {
   Provincia(
       {this.nombre = '',

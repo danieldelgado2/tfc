@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:verbenapp/src/DAL/models/models.dart';
 
+///
+/// Encargado de realizar operaciones CRUD en BD
+///
 class ProvinciaRepository {
   Future<List<Provincia>> provinciasParaSelect() async {
     var response =

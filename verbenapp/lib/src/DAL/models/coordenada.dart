@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'dart:math';
 
+///
+/// Realiza operaciones de parseo para una
+/// lista de Coordenada
+///
 class Coordenadas {
   List<Coordenada> coordenadas = [];
 
@@ -24,10 +28,12 @@ class Coordenadas {
     });
   }
 }
-// To parse this JSON data, do
-//
-//     final verbena = verbenaFromJson(jsonString);
 
+///
+/// Modelo de la coleccion en BD con el mismo nombre.
+/// Se encarga de parsear solo los registros de BD que
+/// esten dentro de un rango determinado.
+///
 class Coordenada {
   Coordenada({this.localidad = '', this.latitud = 0.0, this.longitud = 0.0});
 

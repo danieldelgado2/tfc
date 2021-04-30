@@ -5,6 +5,16 @@ enum LocalidadSeleccionadaStatus {
   selected,
 }
 
+///
+/// Clase de tipo State, a la que
+/// reaccionará la UI gracias a los
+/// BlocBuilders o BlocListeners.
+///
+/// Disponer de varios constructores
+/// dependiendo de las propiedades del
+/// estado concreto al que va a pasar
+///
+///
 class LocalidadSeleccionadaState extends Equatable {
   const LocalidadSeleccionadaState._(
       {this.localidad, this.status = LocalidadSeleccionadaStatus.initial});

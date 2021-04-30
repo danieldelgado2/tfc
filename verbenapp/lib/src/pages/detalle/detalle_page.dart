@@ -3,6 +3,11 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:verbenapp/src/DAL/models/verbena.dart';
 import 'package:verbenapp/src/pages/detalle/star_rating.dart';
 
+///
+/// Vista principal del Detalle
+/// de la Verbena seleccionada en
+/// la vista de Búsqueda
+///
 class DetallePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -236,140 +241,140 @@ class BotonMaps extends StatelessWidget {
   }
 }
 
-class Comentarios extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final _sc = MediaQuery.of(context).size;
-    return Container(
-      height: _sc.height,
-      width: _sc.width,
-      color: Colors.greenAccent,
-      child: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.deepOrangeAccent,
-              ),
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text(
-                        'Valoraciones',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Comentario(),
-            FloatingActionButton(
-                child: Icon(Icons.add),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AgregarComentario());
-                })
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class Comentarios extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final _sc = MediaQuery.of(context).size;
+//     return Container(
+//       height: _sc.height,
+//       width: _sc.width,
+//       color: Colors.greenAccent,
+//       child: Drawer(
+//         child: ListView(
+//           padding: EdgeInsets.zero,
+//           children: <Widget>[
+//             DrawerHeader(
+//               decoration: BoxDecoration(
+//                 color: Colors.deepOrangeAccent,
+//               ),
+//               child: Container(
+//                 child: Column(
+//                   crossAxisAlignment: CrossAxisAlignment.start,
+//                   children: [
+//                     Center(
+//                       child: Text(
+//                         'Valoraciones',
+//                         style: TextStyle(
+//                           color: Colors.white,
+//                           fontSize: 24,
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//             Comentario(),
+//             FloatingActionButton(
+//                 child: Icon(Icons.add),
+//                 onPressed: () {
+//                   showDialog(
+//                       context: context,
+//                       builder: (context) => AgregarComentario());
+//                 })
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-class Comentario extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final _sc = MediaQuery.of(context).size;
-    return Card(
-      color: Colors.amber,
-      margin: EdgeInsets.all(10),
-      child: Container(
-        padding: EdgeInsets.all(10),
-        height: _sc.height * 0.3,
-        width: _sc.width,
-        child: Column(
-          children: [
-            Text(
-                'Holaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaola')
-          ],
-        ),
-      ),
-    );
-  }
-}
+// class Comentario extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     final _sc = MediaQuery.of(context).size;
+//     return Card(
+//       color: Colors.amber,
+//       margin: EdgeInsets.all(10),
+//       child: Container(
+//         padding: EdgeInsets.all(10),
+//         height: _sc.height * 0.3,
+//         width: _sc.width,
+//         child: Column(
+//           children: [
+//             Text(
+//                 'Holaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaolaola')
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-class AgregarComentario extends StatefulWidget {
-  @override
-  _AgregarComentarioState createState() => _AgregarComentarioState();
-}
+// class AgregarComentario extends StatefulWidget {
+//   @override
+//   _AgregarComentarioState createState() => _AgregarComentarioState();
+// }
 
-class _AgregarComentarioState extends State<AgregarComentario> {
-  TextEditingController controller;
-  FocusNode focus;
-  @override
-  void initState() {
-    controller = TextEditingController();
-    focus = FocusNode();
-    super.initState();
-  }
+// class _AgregarComentarioState extends State<AgregarComentario> {
+//   TextEditingController controller;
+//   FocusNode focus;
+//   @override
+//   void initState() {
+//     controller = TextEditingController();
+//     focus = FocusNode();
+//     super.initState();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    final _sc = MediaQuery.of(context).size;
-    return AlertDialog(
-      insetPadding: EdgeInsets.all(10),
-      contentPadding: EdgeInsets.all(0),
-      content: Container(
-        height: _sc.height * 0.45,
-        width: _sc.width,
-        padding: EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Añade una valoración',
-                style: TextStyle(
-                  fontSize: 24,
-                )),
-            StarRating(
-              rating: 3,
-              onRatingChanged: null,
-            ),
-            GestureDetector(
-              child: Container(
-                padding: EdgeInsets.all(10),
-                margin: EdgeInsets.all(10),
-                height: _sc.height * 0.2,
-                width: _sc.width,
-                decoration: BoxDecoration(
-                    border:
-                        Border.all(color: Colors.deepOrangeAccent, width: 2)),
-                child: ListView(
-                  children: [
-                    TextField(
-                      controller: controller,
-                      maxLines: null,
-                      decoration: null,
-                      focusNode: focus,
-                    ),
-                  ],
-                ),
-              ),
-              onTap: () {
-                focus.requestFocus();
-              },
-            ),
-            ElevatedButton(child: Text('Valorar'), onPressed: () {})
-          ],
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     final _sc = MediaQuery.of(context).size;
+//     return AlertDialog(
+//       insetPadding: EdgeInsets.all(10),
+//       contentPadding: EdgeInsets.all(0),
+//       content: Container(
+//         height: _sc.height * 0.45,
+//         width: _sc.width,
+//         padding: EdgeInsets.all(10),
+//         child: Column(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             Text('Añade una valoración',
+//                 style: TextStyle(
+//                   fontSize: 24,
+//                 )),
+//             StarRating(
+//               rating: 3,
+//               onRatingChanged: null,
+//             ),
+//             GestureDetector(
+//               child: Container(
+//                 padding: EdgeInsets.all(10),
+//                 margin: EdgeInsets.all(10),
+//                 height: _sc.height * 0.2,
+//                 width: _sc.width,
+//                 decoration: BoxDecoration(
+//                     border:
+//                         Border.all(color: Colors.deepOrangeAccent, width: 2)),
+//                 child: ListView(
+//                   children: [
+//                     TextField(
+//                       controller: controller,
+//                       maxLines: null,
+//                       decoration: null,
+//                       focusNode: focus,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               onTap: () {
+//                 focus.requestFocus();
+//               },
+//             ),
+//             ElevatedButton(child: Text('Valorar'), onPressed: () {})
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verbenapp/src/pages/form/bloc.dart';
 
+///
+/// Contiene los campos relativos
+/// a la localidad localidad que se esta editando
+///
 class FormLocalidad extends StatefulWidget {
   @override
   _FormLocalidadState createState() => _FormLocalidadState();
@@ -39,6 +43,10 @@ class _FormLocalidadState extends State<FormLocalidad> {
   }
 }
 
+///
+/// Los TextFormField de los datos de la
+/// localidad que se esta editando
+///
 class Inputs extends StatelessWidget {
   final loc;
 
@@ -110,6 +118,10 @@ class Inputs extends StatelessWidget {
   }
 }
 
+///
+/// Contenedor con todas las verbenas de
+/// la localidad que se esta editando
+///
 class ListaVerbenas extends StatelessWidget {
   final verbenas;
   ListaVerbenas({this.verbenas});
