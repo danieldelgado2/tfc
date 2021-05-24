@@ -7,4 +7,4 @@ export 'coordenada.dart';
 export 'localidad.dart';
 export 'mapa.dart';
 export 'provincia.dart';
-export 'package:verbenapp/src/DAL/models/models.dart';
+export 'package:Verbenapp/src/DAL/models/models.dart';

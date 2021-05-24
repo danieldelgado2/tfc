@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:Verbenapp/src/pages/buscar/verbena_horizontal.dart';
 
 import 'buscar.dart';
 import 'dd_provincias.dart';
@@ -22,7 +23,7 @@ class AppBarMapa extends StatelessWidget {
         BannerDinamico(
           screenSize: _sc,
         ),
-        BotonBusqueda(sc: _sc)
+        BotonBusqueda(sc: _sc),
       ],
     );
   }
@@ -98,9 +99,10 @@ class _BannerBusquedaState extends State<BannerBusqueda> {
             }
           },
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: screenSize.width * 0.68,
+                width: screenSize.width * 0.65,
                 height: screenSize.height * 0.22,
                 child: Row(
                   children: [
@@ -173,27 +175,32 @@ class _BannerBusquedaState extends State<BannerBusqueda> {
                   ],
                 ),
               ),
-              FloatingActionButton(
-                  heroTag: 'button-save',
-                  child: Icon(
-                    Icons.search,
-                    size: 30,
-                  ),
-                  backgroundColor: Colors.deepOrangeAccent,
-                  onPressed: () {
-                    (onPressed == null)
-                        ? ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              backgroundColor: Colors.deepOrangeAccent,
-                              content: Text(
-                                'Activa tu ubicación o elige una provincia',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 20),
+              Container(
+                height: 50,
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                child: FloatingActionButton(
+                    heroTag: 'button-save',
+                    child: Icon(
+                      Icons.search,
+                      size: 30,
+                    ),
+                    backgroundColor: Colors.deepOrangeAccent,
+                    onPressed: () {
+                      (onPressed == null)
+                          ? ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.deepOrangeAccent,
+                                content: Text(
+                                  'Activa tu ubicación o elige una provincia',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
                               ),
-                            ),
-                          )
-                        : onPressed();
-                  }),
+                            )
+                          : onPressed();
+                    }),
+              ),
             ],
           ),
         ));
@@ -227,16 +234,19 @@ class _MapaState extends State<Mapa> {
   final MapController _mapController = MapController();
   LocationData _location;
   Provincia provincia;
+  List<Localidad> localidades = <Localidad>[];
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
         listeners: [
           BlocListener<BannerBusquedaBloc, BannerBusquedaState>(
-            listener: (context, state) {
-              if (state.status == BannerBusquedaStatus.porProvincia) {
+              listener: (context, state) {
+            if (state.status == BannerBusquedaStatus.valid) {
+              if (state.provincia != null) {
                 setState(() {
-                  if (state.provincia != null) provincia = state.provincia;
+                  provincia = state.provincia;
+                  _location = null;
                   marcadores = <Marker>[
                     Marker(
                       point: LatLng(provincia.latitud, provincia.longitud),
@@ -258,16 +268,19 @@ class _MapaState extends State<Mapa> {
                   _mapController.move(
                       LatLng(provincia.latitud, provincia.longitud), 8);
                 });
-              } else if (state.status == BannerBusquedaStatus.porUbicacion) {
+              } else if (state.ubicacion != null) {
                 setState(() {
-                  if (state.ubicacion != null) _location = state.ubicacion;
+                  _location = state.ubicacion;
+                  provincia = null;
+                  _mapController.move(
+                      LatLng(_location.latitude, _location.longitude), 8);
                   marcadores = <Marker>[
                     Marker(
                       point: LatLng(_location.latitude, _location.longitude),
                       builder: (ctx) => IconButton(
                         icon: Icon(Icons.accessibility),
-                        color: Colors.deepOrangeAccent,
-                        iconSize: 30,
+                        color: Colors.red,
+                        iconSize: 40,
                         onPressed: () {
                           setState(() {
                             _mapController.move(
@@ -279,15 +292,16 @@ class _MapaState extends State<Mapa> {
                       ),
                     ),
                   ];
-                  _mapController.move(
-                      LatLng(_location.latitude, _location.longitude), 8);
                 });
               }
-            },
-          ),
+            }
+          }),
           BlocListener<FormBusquedaBloc, FormBusquedaState>(
               listener: (context, state) {
             if (state.status == FormBusquedaStatus.empty) {
+              setState(() {
+                localidades = <Localidad>[];
+              });
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 backgroundColor: Colors.deepOrangeAccent,
                 content: Text('Oops! No hay resultados :(',
@@ -296,7 +310,8 @@ class _MapaState extends State<Mapa> {
               ));
             } else if (state.status == FormBusquedaStatus.sucess) {
               final results = marcadores;
-
+              BlocProvider.of<BannerVisibleBloc>(context)
+                  .add(BannerVisibleEvent(true));
               state.locs.forEach(
                 (l) => results.add(Marker(
                   point: LatLng(l.latitud, l.longitud),
@@ -305,39 +320,69 @@ class _MapaState extends State<Mapa> {
                     color: Colors.deepOrangeAccent,
                     iconSize: 30,
                     onPressed: () {
-                      setState(() {
-                        _mapController.move(
-                          LatLng(l.latitud, l.longitud),
-                          14,
-                        );
-                      });
-                      context
-                          .read<LocalidadSeleccionadaBloc>()
-                          .add(ChangeLoc(data: l));
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              height: sc.height * 0.5,
+                              width: sc.width * 0.5,
+                              child: ContainerVerbenas(
+                                  provincia: l.nombre, localidades: [l]),
+                            );
+                          });
                     },
                   ),
                 )),
               );
               setState(() {
                 marcadores = results;
+                localidades = state.locs;
               });
             }
           }),
         ],
-        child: FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-              center: LatLng(36.716667, -4.416667),
-              zoom: 6,
-              controller: _mapController),
-          layers: [
-            TileLayerOptions(
-                urlTemplate:
-                    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                subdomains: ['a', 'b', 'c']),
-            MarkerLayerOptions(markers: marcadores),
-          ],
-        ));
+        child: Stack(alignment: AlignmentDirectional.bottomCenter, children: [
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+                center: LatLng(36.716667, -4.416667),
+                zoom: 6,
+                controller: _mapController),
+            layers: [
+              TileLayerOptions(
+                  urlTemplate:
+                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  subdomains: ['a', 'b', 'c']),
+              MarkerLayerOptions(markers: marcadores),
+            ],
+          ),
+          Container(
+            margin: const EdgeInsets.all(10.0),
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.deepOrangeAccent)),
+                child: Text(
+                  'Ver resultados',
+                  style: TextStyle(fontSize: 24),
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return Container(
+                          height: sc.height * 0.5,
+                          width: sc.width * 0.5,
+                          child: ContainerVerbenas(
+                              provincia: provincia != null
+                                  ? provincia.nombre
+                                  : 'Tu ubicación',
+                              localidades: localidades),
+                        );
+                      });
+                }),
+          ),
+        ]));
   }
 }
 
@@ -351,18 +396,26 @@ class BotonBusqueda extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<BannerVisibleBloc, BannerVisibleState>(
       builder: (context, state) {
-        return Positioned(
-          top: sc.height * 0.108,
-          right: sc.width * 0.02,
-          child: FloatingActionButton(
-            heroTag: 'button-search',
-            child: Icon(
-              Icons.filter_alt_rounded,
-              size: 30,
+        return AnimatedPositioned(
+          curve: Curves.fastOutSlowIn,
+          duration: Duration(milliseconds: 500),
+          top: !state.visible ? sc.height * 0.200 : sc.height * 0.11,
+          right: 0,
+          child: Container(
+            height: 50,
+            margin: EdgeInsets.symmetric(horizontal: 20),
+            child: Center(
+              child: FloatingActionButton(
+                heroTag: 'button-search',
+                child: Icon(
+                  Icons.filter_alt_rounded,
+                  size: 30,
+                ),
+                backgroundColor: Colors.deepOrangeAccent,
+                onPressed: () => BlocProvider.of<BannerVisibleBloc>(context)
+                    .add(BannerVisibleEvent(!state.visible)),
+              ),
             ),
-            backgroundColor: Colors.deepOrangeAccent,
-            onPressed: () => BlocProvider.of<BannerVisibleBloc>(context)
-                .add(BannerVisibleEvent(!state.visible)),
           ),
         );
       },

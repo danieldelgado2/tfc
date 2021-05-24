@@ -15,8 +15,7 @@ part 'banner_busqueda_state.dart';
 ///
 class BannerBusquedaBloc
     extends Bloc<BannerBusquedaEvent, BannerBusquedaState> {
-  BannerBusquedaBloc({this.mapaBL})
-      : super(BannerBusquedaState.invalid(null, null, false));
+  BannerBusquedaBloc({this.mapaBL}) : super(BannerBusquedaState.invalid());
 
   final MapaBL mapaBL;
 
@@ -32,35 +31,28 @@ class BannerBusquedaBloc
     BannerBusquedaEvent event,
   ) async* {
     if (event is CambiaProvincia) {
-      yield BannerBusquedaState.porProvincia(event.provincia, state.byDelMes);
-      print(
-          'Se ha cambiado la provincia del dropdown a ${event.provincia.nombre}');
+      if (event.provincia != null)
+        yield BannerBusquedaState.valid(null, event.provincia, state.byDelMes);
+      else
+        yield BannerBusquedaState.invalid();
     } else if (event is PorProvincia) {
-      if (event.provincia != null) {
-        yield BannerBusquedaState.porProvincia(state.provincia, state.byDelMes);
-        print(
-            'Evento por provincia con la provincia ${event.provincia.nombre}');
-      } else
-        print('Evento por provincia pero la provincia es null');
-      // yield BannerBusquedaState.invalid(
-      //     state.ubicacion, state.provincia, state.byDelMes);
+      if (event.provincia != null)
+        yield BannerBusquedaState.valid(null, event.provincia, state.byDelMes);
+      else
+        yield BannerBusquedaState.invalid();
     } else if (event is PorUbicacion) {
       if (_location == null) _location = await mapaBL.getLocation();
-      if (_location != null) {
-        print('evento por ubicacion en ${_location.latitude}');
-        yield BannerBusquedaState.porUbicacion(_location, state.byDelMes);
-      } else {
-        print('la app no tiene permisos');
-        yield BannerBusquedaState.invalid(
-            state.ubicacion, state.provincia, state.byDelMes);
-      }
+      if (_location != null)
+        yield BannerBusquedaState.valid(_location, null, state.byDelMes);
+      else
+        yield BannerBusquedaState.invalid();
     } else if (event is CambiaCheck) {
       if (state.ubicacion != null)
-        yield BannerBusquedaState.porUbicacion(state.ubicacion, event.value);
+        yield BannerBusquedaState.valid(state.ubicacion, null, event.value);
       else if (state.provincia != null)
-        yield BannerBusquedaState.porProvincia(state.provincia, event.value);
-
-      print('check cambiado a ${event.value}');
+        yield BannerBusquedaState.valid(null, state.provincia, event.value);
+      else
+        yield BannerBusquedaState.invalid();
     }
   }
 }

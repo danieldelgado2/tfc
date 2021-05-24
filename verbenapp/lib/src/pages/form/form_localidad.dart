@@ -1,6 +1,7 @@
+import 'package:Verbenapp/src/pages/form/form_verbena.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/src/pages/form/bloc.dart';
+import 'package:Verbenapp/src/pages/form/bloc.dart';
 
 ///
 /// Contiene los campos relativos
@@ -28,6 +29,33 @@ class _FormLocalidadState extends State<FormLocalidad> {
           children: [
             Inputs(
               loc: _loc,
+            ),
+            Container(
+              margin: EdgeInsets.all(10),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.deepOrangeAccent)),
+                child: Text(
+                  'Añadir Verbena',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        context.read<FormVerbenaBloc>().add(ResetFormVerbena());
+                        final sc = MediaQuery.of(context).size;
+                        return Scaffold(
+                          body: Container(
+                              margin: EdgeInsets.all(10),
+                              height: sc.height,
+                              width: sc.width,
+                              child: FormVerbena()),
+                        );
+                      });
+                },
+              ),
             ),
             Text(
               'Verbenas',
@@ -130,6 +158,7 @@ class ListaVerbenas extends StatelessWidget {
     return Container(
       width: 400,
       height: 200,
+      color: Colors.yellow,
       child: ListView.builder(
         itemCount: verbenas.length,
         itemBuilder: (ctx, i) {
@@ -154,6 +183,18 @@ class ListaVerbenas extends StatelessWidget {
               context
                   .read<FormVerbenaBloc>()
                   .add(ChangeVerbena(data: verbenas[i]));
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    final sc = MediaQuery.of(context).size;
+                    return Scaffold(
+                      body: Container(
+                          margin: EdgeInsets.all(10),
+                          height: sc.height,
+                          width: sc.width,
+                          child: FormVerbena()),
+                    );
+                  });
             },
           );
         },

@@ -1,4 +1,4 @@
-name: verbenapp
+name: Verbenapp
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -49,7 +49,7 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/img/happy-file.png"
+  image_path: "assets/img/logo.png"
   adaptive_icon_background: "assets/img/logo.png"
 
 # For information on the generic Dart part of this file, see the

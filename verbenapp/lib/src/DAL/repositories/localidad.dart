@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:verbenapp/src/DAL/models/models.dart';
-import 'package:verbenapp/src/DAL/repositories/repositories.dart';
+import 'package:Verbenapp/src/DAL/models/models.dart';
+import 'package:Verbenapp/src/DAL/repositories/repositories.dart';
 
 ///
 /// Encargado de realizar operaciones CRUD en BD

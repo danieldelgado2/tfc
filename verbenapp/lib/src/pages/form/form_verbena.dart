@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/src/pages/form/bloc.dart';
+import 'package:Verbenapp/src/pages/form/bloc.dart';
 
 ///
 /// Vista principal del formulario
@@ -15,19 +15,9 @@ class FormVerbena extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: [
-            Center(
-              child: ElevatedButton(
-                child: Text(
-                  'Añadir Verbena',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                ),
-                onPressed: () {
-                  context
-                      .read<FormLocalidadBloc>()
-                      .add(AgregarVerbenas(state.verbena));
-                  context.read<FormVerbenaBloc>().add(ResetFormVerbena());
-                },
-              ),
+            Text(
+              'Insertar Verbena',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             TextFormField(
               decoration: InputDecoration(
@@ -138,16 +128,32 @@ class FormVerbena extends StatelessWidget {
                 context.read<FormVerbenaBloc>().add(UrlTrip(data: value));
               },
             ),
-            Center(
-              child: ElevatedButton(
-                child: Text(
-                  'Limpiar',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  child: Text(
+                    'Volver',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                 ),
-                onPressed: () {
-                  context.read<FormVerbenaBloc>().add(ResetFormVerbena());
-                },
-              ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.green)),
+                  child: Text(
+                    'Guardar',
+                    style: TextStyle(fontSize: 24),
+                  ),
+                  onPressed: () {
+                    context
+                        .read<FormLocalidadBloc>()
+                        .add(AgregarVerbenas(state.verbena));
+                  },
+                ),
+              ],
             ),
           ],
         );

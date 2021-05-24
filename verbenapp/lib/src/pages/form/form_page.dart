@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/src/pages/form/bloc.dart';
-import 'package:verbenapp/src/pages/form/dd_localidades.dart';
-import 'package:verbenapp/src/pages/form/form_localidad.dart';
+import 'package:Verbenapp/src/pages/form/bloc.dart';
+import 'package:Verbenapp/src/pages/form/dd_localidades.dart';
+import 'package:Verbenapp/src/pages/form/form_localidad.dart';
 
 import 'form_verbena.dart';
 
@@ -33,25 +33,36 @@ class _FormPage extends StatelessWidget {
                 delegate: SliverChildListDelegate(
                   [
                     DDLocalidades(),
-                    ElevatedButton(
-                      child: Text('Guardar'),
-                      onPressed: () {
-                        context
-                            .read<FormLocalidadBloc>()
-                            .add(GuardarLocalidad());
-                      },
-                    ),
-                    ElevatedButton(
-                      child: Text('Nueva Localidad'),
-                      onPressed: () {
-                        context
-                            .read<FormLocalidadBloc>()
-                            .add(ChangeDD(Localidad(verbenas: <Verbena>[])));
-                      },
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          child: Text(
+                            'Nueva localidad',
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          onPressed: () {
+                            context.read<FormLocalidadBloc>().add(
+                                ChangeDD(Localidad(verbenas: <Verbena>[])));
+                          },
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all(Colors.green)),
+                          child: Text(
+                            'Guardar',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                          onPressed: () {
+                            context
+                                .read<FormLocalidadBloc>()
+                                .add(GuardarLocalidad());
+                          },
+                        ),
+                      ],
                     ),
                     FormLocalidad(),
-                    Padding(padding: EdgeInsets.only(top: 30)),
-                    FormVerbena(),
                   ],
                 ),
               )

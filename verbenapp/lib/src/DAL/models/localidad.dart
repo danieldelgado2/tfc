@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:verbenapp/src/DAL/models/models.dart';
+import 'package:Verbenapp/src/DAL/models/models.dart';
 
 ///
 /// Realiza operaciones de parseo para una

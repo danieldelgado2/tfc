@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // _boton('Admin', 'form', context),
+          _boton('Admin', 'form', context),
           _boton('Buscar', 'buscar', context),
         ],
       ),

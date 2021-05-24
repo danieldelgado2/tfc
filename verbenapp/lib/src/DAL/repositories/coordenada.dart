@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:verbenapp/src/DAL/models/models.dart';
-import 'package:verbenapp/src/DAL/repositories/repositories.dart';
+import 'package:Verbenapp/src/DAL/models/models.dart';
+import 'package:Verbenapp/src/DAL/repositories/repositories.dart';
 
 ///
 /// Encargado de realizar operaciones CRUD en BD
@@ -8,7 +8,7 @@ import 'package:verbenapp/src/DAL/repositories/repositories.dart';
 class CoordenadaRepository {
   final _coordRepository = Firestore.instance.collection('coordenadas');
 
-  Future<List<String>> nombresLocFromUbicacion(double lat, double lng) async {
+  List<String> nombresLocFromUbicacion(double lat, double lng) async {
     var results = <String>[];
     var coord;
 

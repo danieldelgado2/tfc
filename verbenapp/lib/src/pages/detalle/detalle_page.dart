@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:verbenapp/src/DAL/models/verbena.dart';
-import 'package:verbenapp/src/pages/detalle/star_rating.dart';
+import 'package:Verbenapp/src/DAL/models/verbena.dart';
+import 'package:Verbenapp/src/pages/detalle/star_rating.dart';
 
 ///
 /// Vista principal del Detalle
@@ -21,7 +21,6 @@ class DetallePage extends StatelessWidget {
           SizedBox(
             height: 10.0,
           ),
-
           Center(
             child: Text(
               verbena.nombre,
@@ -38,7 +37,20 @@ class DetallePage extends StatelessWidget {
           _detalles(verbena, context),
           Botones(verbena: verbena),
           _descripcion(verbena),
-          // _mapa(verbena, context)
+          Container(
+            padding: EdgeInsets.all(20),
+            child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.deepOrangeAccent)),
+                child: Text(
+                  'Seguir buscando',
+                  style: TextStyle(fontSize: 20),
+                )),
+          )
         ])),
       ]),
     );
@@ -83,7 +95,9 @@ class DetallePage extends StatelessWidget {
                     Icon(Icons.calendar_today, color: Colors.deepOrangeAccent),
               ),
               Text(
-                verbena.desde + " - " + verbena.hasta,
+                verbena.desde != verbena.hasta
+                    ? verbena.desde + " - " + verbena.hasta
+                    : verbena.desde,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 20),
               ),
@@ -112,7 +126,8 @@ class DetallePage extends StatelessWidget {
 
   Widget _descripcion(Verbena verbena) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.0),
+      margin: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10),
       child: Text(
         verbena.descripcion,
         textAlign: TextAlign.justify,

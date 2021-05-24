@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/src/BL/bl.dart';
-import 'package:verbenapp/src/pages/buscar/buscar.dart';
-import 'package:verbenapp/src/pages/buscar/buscar_page.dart';
-import 'package:verbenapp/src/pages/detalle/detalle_page.dart';
-import 'package:verbenapp/src/pages/form/bloc.dart';
-import 'package:verbenapp/src/pages/form/form_page.dart';
+import 'package:Verbenapp/src/BL/bl.dart';
+import 'package:Verbenapp/src/pages/buscar/buscar.dart';
+import 'package:Verbenapp/src/pages/buscar/buscar_page.dart';
+import 'package:Verbenapp/src/pages/detalle/detalle_page.dart';
+import 'package:Verbenapp/src/pages/form/bloc.dart';
+import 'package:Verbenapp/src/pages/form/form_page.dart';
 import 'package:flutter/services.dart';
 
 import 'src/home_page.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -44,9 +44,9 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) =>
               DropDownProvinciasBloc(provinciaBL: _provinciaBL),
         ),
-        BlocProvider<LocalidadSeleccionadaBloc>(
-          create: (BuildContext context) => LocalidadSeleccionadaBloc(),
-        ),
+        // BlocProvider<LocalidadSeleccionadaBloc>(
+        //   create: (BuildContext context) => LocalidadSeleccionadaBloc(),
+        // ),
         BlocProvider<DDBloc>(
           create: (BuildContext context) => DDBloc(localidadBL: _localidadBL),
         ),

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:verbenapp/src/DAL/models/provincia.dart';
+import 'package:Verbenapp/src/DAL/models/provincia.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 import 'blocs/BannerBusqueda/banner_busqueda_bloc.dart';
-
 
 class DropDownProvincias extends StatelessWidget {
   final List<Provincia> provincias;
@@ -16,7 +15,7 @@ class DropDownProvincias extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownSearch<Provincia>(
-      mode: Mode.BOTTOM_SHEET,
+      mode: Mode.DIALOG,
       enabled: enabled,
       dropdownSearchDecoration: InputDecoration(
         contentPadding: EdgeInsets.only(left: 5),

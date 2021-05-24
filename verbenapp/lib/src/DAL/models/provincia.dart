@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:verbenapp/src/DAL/models/localidad.dart';
+import 'package:Verbenapp/src/DAL/models/localidad.dart';
 
 ///
 /// Realiza operaciones de parseo para una
