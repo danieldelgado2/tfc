@@ -6,10 +6,9 @@ part of 'form_localidad_bloc.dart';
 /// y que el Bloc se encargará de revisar
 /// y cambiar a un State determinado
 ///
-abstract class FormLocalidadEvent extends Equatable {
+abstract class FormLocalidadEvent {
   const FormLocalidadEvent();
 
-  @override
   List<Object> get props => [];
 }
 
@@ -17,7 +16,13 @@ abstract class FormLocalidadEvent extends Equatable {
 /// Evento para guardar
 /// la Localidad
 ///
-class GuardarLocalidad extends FormLocalidadEvent {}
+class GuardarLocalidad extends FormLocalidadEvent {
+  const GuardarLocalidad(this.data);
+  final data;
+
+  @override
+  List<Object> get props => [data];
+}
 
 ///
 /// Evento para modificar el nombre de
@@ -70,8 +75,8 @@ class ModificarLongitud extends FormLocalidadEvent {
 ///
 /// Evento para agregar verbenas a la Localidad
 ///
-class AgregarVerbenas extends FormLocalidadEvent {
-  const AgregarVerbenas(this.data);
+class ModificarVerbenas extends FormLocalidadEvent {
+  const ModificarVerbenas(this.data);
   final data;
 
   @override

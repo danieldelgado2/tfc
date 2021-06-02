@@ -6,10 +6,9 @@ part of 'form_verbena_bloc.dart';
 /// y que el Bloc se encargará de revisar
 /// y cambiar a un State determinado
 ///
-abstract class FormVerbenaEvent extends Equatable {
+abstract class FormVerbenaEvent {
   const FormVerbenaEvent();
 
-  @override
   List<Object> get props => [];
 }
 
@@ -86,6 +85,7 @@ class UrlV extends FormVerbenaEvent {
   @override
   List<Object> get props => [data];
 }
+
 ///
 /// Evento para modificar la url
 ///

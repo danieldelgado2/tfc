@@ -11,9 +11,24 @@ import 'form_verbena.dart';
 /// Vista principal del formulario
 ///
 class FormPage extends StatelessWidget {
+  final _localidadBL = LocalidadBL();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _FormPage());
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<DDBloc>(
+          create: (BuildContext context) => DDBloc(localidadBL: _localidadBL),
+        ),
+        BlocProvider<FormLocalidadBloc>(
+          create: (BuildContext context) =>
+              FormLocalidadBloc(localidadBL: _localidadBL),
+        ),
+        BlocProvider<FormVerbenaBloc>(
+          create: (BuildContext context) => FormVerbenaBloc(),
+        ),
+      ],
+      child: Scaffold(resizeToAvoidBottomInset: true, body: _FormPage()),
+    );
   }
 }
 
@@ -48,16 +63,33 @@ class _FormPage extends StatelessWidget {
                         ),
                         ElevatedButton(
                           style: ButtonStyle(
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.green)),
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.deepOrangeAccent)),
                           child: Text(
-                            'Guardar',
-                            style: TextStyle(fontSize: 24),
+                            'Añadir verbena',
+                            style: TextStyle(fontSize: 20),
                           ),
                           onPressed: () {
-                            context
-                                .read<FormLocalidadBloc>()
-                                .add(GuardarLocalidad());
+                            showModalBottomSheet(
+                                isScrollControlled: true,
+                                context: context,
+                                builder: (context) {
+                                  context
+                                      .read<FormVerbenaBloc>()
+                                      .add(ResetFormVerbena());
+                                  final sc = MediaQuery.of(context).size;
+                                  return Wrap(
+                                    children: [
+                                      Container(
+                                          margin: EdgeInsets.all(10),
+                                          height: sc.height * 0.75,
+                                          width: sc.width,
+                                          child: FormVerbena(
+                                            verbena: Verbena(),
+                                          )),
+                                    ],
+                                  );
+                                });
                           },
                         ),
                       ],

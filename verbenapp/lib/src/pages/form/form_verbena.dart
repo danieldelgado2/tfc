@@ -8,156 +8,181 @@ import 'package:Verbenapp/src/pages/form/bloc.dart';
 /// crear o editar localidades/verbenas
 ///
 ///
-class FormVerbena extends StatelessWidget {
+class FormVerbena extends StatefulWidget {
+  final verbena;
+  FormVerbena({this.verbena});
+  @override
+  _FormVerbenaState createState() => _FormVerbenaState();
+}
+
+class _FormVerbenaState extends State<FormVerbena> {
+  Verbena verbena;
+  @override
+  void initState() {
+    verbena = widget.verbena;
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(child: BlocBuilder<FormVerbenaBloc, FormVerbenaState>(
-      builder: (context, state) {
-        return Column(
-          children: [
-            Text(
-              'Insertar Verbena',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Nombre',
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
+    return Container(
+      child: Column(
+        children: [
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Nombre',
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
               ),
-              controller: TextEditingController(text: state.verbena.nombre),
-              style: TextStyle(fontSize: 22),
-              onChanged: (value) {
-                context.read<FormVerbenaBloc>().add(NombreV(data: value));
-              },
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Descripción',
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
+            controller: TextEditingController(text: verbena.nombre),
+            style: TextStyle(fontSize: 22),
+            onChanged: (value) {
+              setState(() {
+                verbena.nombre = value;
+              });
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Descripción',
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
               ),
-              controller:
-                  TextEditingController(text: state.verbena.descripcion),
-              style: TextStyle(fontSize: 22),
-              onChanged: (value) {
-                context.read<FormVerbenaBloc>().add(DescripcionV(data: value));
-              },
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Desde',
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                      ),
+            controller: TextEditingController(text: verbena.descripcion),
+            style: TextStyle(fontSize: 22),
+            onChanged: (value) {
+              setState(() {
+                verbena.descripcion = value;
+              });
+            },
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Desde',
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
                     ),
-                    controller:
-                        TextEditingController(text: state.verbena.desde),
-                    style: TextStyle(fontSize: 22),
-                    onChanged: (value) {
-                      context.read<FormVerbenaBloc>().add(DesdeV(data: value));
-                    },
                   ),
-                ),
-                Expanded(
-                  child: TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Hasta',
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                      ),
-                    ),
-                    controller:
-                        TextEditingController(text: state.verbena.hasta),
-                    style: TextStyle(fontSize: 22),
-                    onChanged: (value) {
-                      context.read<FormVerbenaBloc>().add(HastaV(data: value));
-                    },
-                  ),
-                ),
-              ],
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Imagen',
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
-              ),
-              controller: TextEditingController(text: state.verbena.img),
-              style: TextStyle(fontSize: 22),
-              onChanged: (value) {
-                context.read<FormVerbenaBloc>().add(ImgV(data: value));
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Url',
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
-              ),
-              controller: TextEditingController(text: state.verbena.url),
-              style: TextStyle(fontSize: 22),
-              onChanged: (value) {
-                context.read<FormVerbenaBloc>().add(UrlV(data: value));
-              },
-            ),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Url Trip Advisor',
-                labelStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
-              ),
-              controller: TextEditingController(text: state.verbena.urlTrip),
-              style: TextStyle(fontSize: 22),
-              onChanged: (value) {
-                context.read<FormVerbenaBloc>().add(UrlTrip(data: value));
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  child: Text(
-                    'Volver',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
+                  controller: TextEditingController(text: verbena.desde),
+                  style: TextStyle(fontSize: 22),
+                  onChanged: (value) {
+                    setState(() {
+                      verbena.desde = value;
+                    });
                   },
                 ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.green)),
-                  child: Text(
-                    'Guardar',
-                    style: TextStyle(fontSize: 24),
+              ),
+              Expanded(
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Hasta',
+                    labelStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
                   ),
-                  onPressed: () {
-                    context
-                        .read<FormLocalidadBloc>()
-                        .add(AgregarVerbenas(state.verbena));
+                  controller: TextEditingController(text: verbena.hasta),
+                  style: TextStyle(fontSize: 22),
+                  onChanged: (value) {
+                    setState(() {
+                      verbena.hasta = value;
+                    });
                   },
                 ),
-              ],
+              ),
+            ],
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Imagen',
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
             ),
-          ],
-        );
-      },
-    ));
+            controller: TextEditingController(text: verbena.img),
+            style: TextStyle(fontSize: 22),
+            onChanged: (value) {
+              setState(() {
+                verbena.img = value;
+              });
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Url',
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+            ),
+            controller: TextEditingController(text: verbena.url),
+            style: TextStyle(fontSize: 22),
+            onChanged: (value) {
+              setState(() {
+                verbena.url = value;
+              });
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(
+              labelText: 'Url Trip Advisor',
+              labelStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+            ),
+            controller: TextEditingController(text: verbena.urlTrip),
+            style: TextStyle(fontSize: 22),
+            onChanged: (value) {
+              setState(() {
+                verbena.urlTrip = value;
+              });
+            },
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                child: Text(
+                  'Volver',
+                  style: TextStyle(fontSize: 24),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green)),
+                child: Text(
+                  'Guardar',
+                  style: TextStyle(fontSize: 24),
+                ),
+                onPressed: () {
+                  context
+                      .read<FormLocalidadBloc>()
+                      .add(ModificarVerbenas(verbena));
+                  context.read<FormVerbenaBloc>().add(ResetFormVerbena());
+                  setState(() {
+                    verbena = Verbena();
+                  });
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

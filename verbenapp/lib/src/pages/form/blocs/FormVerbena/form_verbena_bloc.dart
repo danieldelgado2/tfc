@@ -23,35 +23,35 @@ class FormVerbenaBloc extends Bloc<FormVerbenaEvent, FormVerbenaState> {
     FormVerbenaEvent event,
   ) async* {
     if (event is ChangeVerbena) {
-      yield state.copyWith(v: event.data);
+      yield FormVerbenaState.modify(event.data);
     } else if (event is NombreV) {
       state.verbena.nombre = event.data;
       yield state;
     } else if (event is DescripcionV) {
       state.verbena.descripcion = event.data;
-      yield state;
+      yield FormVerbenaState.modify(state.verbena);
     } else if (event is DesdeV) {
       if (event.data.isNotEmpty) {
         state.verbena.desde = event.data;
-        yield state;
+        yield FormVerbenaState.modify(state.verbena);
       }
     } else if (event is HastaV) {
       if (event.data.isNotEmpty) {
         state.verbena.hasta = event.data;
-        yield state;
+        yield FormVerbenaState.modify(state.verbena);
       }
       yield state;
     } else if (event is UrlV) {
       state.verbena.url = event.data;
-      yield state;
+      yield FormVerbenaState.modify(state.verbena);
     } else if (event is UrlTrip) {
       state.verbena.urlTrip = event.data;
-      yield state;
+      yield FormVerbenaState.modify(state.verbena);
     } else if (event is ImgV) {
       state.verbena.img = event.data;
-      yield state;
+      yield FormVerbenaState.modify(state.verbena);
     } else if (event is ResetFormVerbena) {
-      yield FormVerbenaState.initial();
+      yield FormVerbenaState.reset();
     }
   }
 }

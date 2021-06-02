@@ -49,16 +49,12 @@ class FormLocalidadState {
       : this._(locEditar: loc, status: FormLocalidadStatus.loading);
 
   // Estado al tener una insercción correcta en BD
-  FormLocalidadState.success()
-      : this._(
-            status: FormLocalidadStatus.success,
-            locEditar: Localidad(verbenas: []));
+  FormLocalidadState.success(l)
+      : this._(status: FormLocalidadStatus.success, locEditar: l);
 
   // Estado al tener una insercción incorrecta en BD
-  FormLocalidadState.error()
-      : this._(
-          status: FormLocalidadStatus.error,
-        );
+  FormLocalidadState.error(l)
+      : this._(status: FormLocalidadStatus.error, locEditar: l);
 
   final status;
   final locEditar;

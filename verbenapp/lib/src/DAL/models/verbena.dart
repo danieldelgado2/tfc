@@ -18,6 +18,7 @@ class Verbenas {
 
     for (var item in jsonList) {
       final verbena = new Verbena.fromJson(item);
+      verbena.id = verbena.nombre;
       verbena.localidad = localidad;
       verbena.provincia = provincia;
       verbenas.add(verbena);
@@ -138,6 +139,11 @@ class Verbena {
     } else {
       return detailImg;
     }
+  }
+
+  @override
+  String toString() {
+    return "Nombre: $nombre \n" + "id: $id";
   }
 }
 

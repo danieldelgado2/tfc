@@ -42,27 +42,39 @@ class FormLocalidadBloc extends Bloc<FormLocalidadEvent, FormLocalidadState> {
       final r = double.tryParse(event.data);
       if (r != null) {
         state.locEditar.latitud = r;
-        yield state;
+        yield FormLocalidadState.changeDD(state.locEditar);
       }
     } else if (event is ModificarLongitud) {
       final r = double.tryParse(event.data);
       if (r != null) {
         state.locEditar.longitud = r;
-        yield state;
+        yield FormLocalidadState.changeDD(state.locEditar);
       }
-    } else if (event is AgregarVerbenas) {
-      state.locEditar.verbenas.add(event.data);
+    } else if (event is ModificarVerbenas) {
+      var verbenas = state.locEditar.verbenas;
+      if (event.data.id == "") {
+        event.data.id = event.data.nombre;
+        verbenas.add(event.data);
+      } else {
+        var v = verbenas.firstWhere((v) => v.id == event.data.id);
+        if (v != null)
+          verbenas[verbenas.indexOf(v)] = event.data;
+        else
+          print("ha salido null");
+      }
+
       yield FormLocalidadState.agregarV(state.locEditar);
     } else if (event is QuitarVerbenas) {
       state.locEditar.verbenas.removeAt(event.data);
       yield FormLocalidadState.quitarV(state.locEditar);
     } else if (event is GuardarLocalidad) {
-      yield FormLocalidadState.insertRegistro(state.locEditar);
+      yield FormLocalidadState.insertRegistro(event.data);
+      if (await localidadBL.insertarLocalidad(event.data) != null) {
+        if (event.data.id == "") event.data.id = event.data.nombre;
 
-      if (await localidadBL.insertarLocalidad(state.locEditar) != null)
-        yield FormLocalidadState.success();
-      else
-        yield FormLocalidadState.error();
+        yield FormLocalidadState.success(event.data);
+      } else
+        yield FormLocalidadState.error(state.locEditar);
     }
   }
 }

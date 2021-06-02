@@ -1,16 +1,42 @@
+import 'package:Verbenapp/src/BL/bl.dart';
 import 'package:flutter/material.dart';
-
-import 'package:Verbenapp/src/pages/buscar/verbena_horizontal.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'appBar.dart';
+import 'blocs/BannerBusqueda/banner_busqueda_bloc.dart';
+import 'blocs/BannerVisible/banner_visible_bloc.dart';
+import 'blocs/DropDownProvincias/dropdown_provincias_bloc.dart';
+import 'blocs/FormBusqueda/form_busqueda_bloc.dart';
 
 ///
 /// Vista de Búsqueda
 ///
 class BuscarPage extends StatelessWidget {
+  final _mapaBL = MapaBL();
+  final _provinciaBL = ProvinciaBL();
+  final _localidadBL = LocalidadBL();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _BuscarPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<FormBusquedaBloc>(
+          create: (BuildContext context) => FormBusquedaBloc(
+            _localidadBL,
+          ),
+        ),
+        BlocProvider<BannerBusquedaBloc>(
+            create: (context) => BannerBusquedaBloc(mapaBL: _mapaBL)),
+        BlocProvider<BannerVisibleBloc>(
+          create: (BuildContext context) => BannerVisibleBloc(),
+        ),
+        BlocProvider<DropDownProvinciasBloc>(
+          create: (BuildContext context) =>
+              DropDownProvinciasBloc(provinciaBL: _provinciaBL),
+        ),
+      ],
+      child: Scaffold(
+        body: _BuscarPage(),
+      ),
     );
   }
 }
